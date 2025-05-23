@@ -1,0 +1,198 @@
+.loadingimg{
+    margin-bottom: 20px;
+    animation-name: zoom ;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-duration: 3s;
+}
+
+
+@keyframes zoom {
+    0%{
+        transform: scale(0.7);
+    }
+    50%{
+        transform: scale(1);
+    }
+    100%{
+        transform: scale(0.7);
+    }
+}
+
+.left-nav{
+
+}
+
+.right-tab{
+    background-color: #161B26;
+    position: fixed;
+    top: 75px;
+    right: 0;
+    z-index: 1;
+    height: 92vh;
+    width: 480px;
+}
+
+.loading-info{
+    color: #85888E;
+}
+
+.preview-nav{
+   margin-bottom: 20px; 
+   border-bottom: 1px solid #1F242F;
+   padding-bottom: 12px;
+}
+
+.nav-tabs{
+    --bs-nav-tabs-link-hover-border-color:none
+}
+
+.preview-nav{
+    position: sticky;
+    top: 80px;
+    z-index: 0;
+    background-color: #0C111D;
+}
+
+.preview-nav .nav-link.active{
+    border: none;
+    background: #1F242F;
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.preview-nav .nav-link{
+    border: none;
+}
+
+.preview-nav .nav-link:hover{
+    border: none;
+}
+
+.prev-acc-box{
+    overflow: hidden;
+    
+}
+
+.prev-acc-box h6{
+    color: #F5F5F6;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.preview-acc-box {
+  max-height:650px; /* Adjust based on layout */
+  overflow-y: scroll;
+  padding-right: 8px; /* prevent content cutoff */
+}
+
+/* Hide scrollbar in Webkit-based browsers */
+.preview-acc-box::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* For Firefox */
+.preview-acc-box {
+  scrollbar-width: none; /* Firefox */
+}
+
+.preview-acc .accordion-button.collapsed{
+    background-color: #262A33!important;
+    padding: 11px 12px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.preview-acc .accordion-button:not(.collapsed){
+    background-color: #262A33!important;
+    color: white!important;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.preview-acc .accordion-body{
+    background-color: #161B26;
+    border-radius: 0px;
+    height: max-content;
+}
+
+.acc-list-data li{
+    list-style-type: none;
+    color: white;
+    padding-bottom: 16px;
+}
+
+.acc-list-data li span{
+    color:#94969C
+}
+
+.acc-list-data .hdr{
+    padding-bottom: 20px;
+}
+
+.export-btn{
+    border-top: 1px solid #1F242F;
+    z-index: 1;
+}
+.exportxl-btn{
+    width: 204px;
+    height: 48px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: linear-gradient(to right, #EB2F96, #722ED1);
+}
+
+.exportxl-btn:hover{
+    background-image: linear-gradient(to right,  #722ED1);
+}
+
+.exportxl-btn img{
+    width: 20px;
+    height: 20px;
+    margin: 6px;
+}
+
+.acc-list-data.tiered{
+    border: 1px solid #1F242F;
+    padding: 16px;
+}
+
+
+.acc-list-data.tiered .ndc-num span{
+    font-size: 12px;
+}
+
+.acc-list-data.tiered .ndc-num h5{
+    font-size: 18px;
+}
+
+.acc-list-data.tiered .wac-price span{
+    font-size: 12px;
+}
+
+.acc-list-data.tiered .wac-price h5{
+    font-size: 18px;
+}
+
+.acc-list-data .split-li{
+    padding: 12px 0px;
+    border-top: 1px solid #1F242F;
+    border-bottom: 1px solid #1F242F;
+}
+
+.tier-split h6{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.tier-split h6 span{
+    color: #94969C;
+}
+
+
