@@ -112,10 +112,19 @@
     font-weight: 600;
 }
 
+.acc-list-data {
+    padding: 0px;
+}
+
+.acc-head{
+    border-bottom: 1px solid #1F242F;
+}
+
 .preview-acc .accordion-body{
     background-color: #161B26;
     border-radius: 0px;
     height: max-content;
+    padding: 10px 0px;
 }
 
 .acc-list-data li{

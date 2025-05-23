@@ -25,8 +25,8 @@ function Topbar() {
         <nav className="header" role="navigation">
     <div className="header-left">
       <h6 className="nav-title">
-      {/* <img src={nexus}/>
-      <img src={srm_white_logo} className="sidebar-logo"/> */}
+      {/* <img src={nexus}/> */}
+      <img src={srm_white_logo} className="sidebar-logo"/> 
      Contract Intelligence
       </h6>
     </div>

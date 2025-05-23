@@ -15,7 +15,7 @@
   }
   
   .header .header-left .nav-title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 600;
     margin: 0;
      background: linear-gradient(to right, #EB2F96, #722ED1);
@@ -27,6 +27,11 @@
     width: 100px;
     height: 30px;
     margin-right: 20px;
+  }
+
+  .nav-title .nav-sep{
+    color: rgb(255, 255, 255,0.4)!important;
+    
   }
 
   .header .header-left .sidebar-logo{

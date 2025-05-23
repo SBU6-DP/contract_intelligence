@@ -7,7 +7,7 @@ import fileImg from "../../images/icons/Excel-default.svg";
 
 import contractPdf from './SRM Pharma Contract.pdf'
 import pricingPdf from './Product_Pricing_Table.pdf'
-import demoexcel from './demovalues.xlsx'
+import demoexcel from './ContractEntities.xlsx'
 
 
 import {
@@ -175,7 +175,7 @@ function Preview() {
               className="d-flex flex-column justify-content-between right-tab"
             >
               <div className="p-3 prev-acc-box">
-                <h6 className="text-light mb-3">Contract Entities</h6>
+                <h6 className="text-light mb-3 acc-head">Contract Entities</h6>
                
                <div className="preview-acc-box">
                  <Accordion
@@ -201,7 +201,7 @@ function Preview() {
                                 </div>
                                 <div className="wac-price">
                                     <span>WAC Price</span>
-                                    <h5 className="text-end">$425</h5>
+                                    <h5 className="text-end">$195</h5>
                                 </div>
                             </div>
                           </li>
@@ -245,20 +245,20 @@ function Preview() {
                             </div>
                           </li>
                         </ul>
-                        {/* <ul className="acc-list-data tiered">
+                        <ul className="acc-list-data tiered">
                           <li className="hdr">
                             <div className="d-flex justify-content-between">
                                 <div className="ndc-num">
                                     <span>NDC Number</span>
-                                    <h5>65483-1021-30</h5>
+                                    <h5>65483-2041-60</h5>
                                 </div>
                                 <div className="wac-price">
                                     <span>WAC Price</span>
-                                    <h5 className="text-end">$200</h5>
+                                    <h5 className="text-end">$425</h5>
                                 </div>
                             </div>
                           </li>
-                          <li className="split-li">
+                          {/* <li className="split-li">
                             <div className="d-flex align-items-center justify-content-between tier-split">
                                 <div className="">
                                     <h6>Tier 1</h6>
@@ -296,8 +296,8 @@ function Preview() {
                                     <h6><span>Final Price</span> : $160</h6>
                                 </div>
                             </div>
-                          </li>
-                        </ul> */}
+                          </li> */}
+                        </ul>
                       </AccordionBody>
                             
                             </> :<>
