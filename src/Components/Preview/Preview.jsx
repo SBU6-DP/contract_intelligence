@@ -41,20 +41,19 @@ const accordionData = [
       'document Status': "Active",
       'document Version Number': "DOC1.0",
       'document Version Creation Date': "5/23/2025",
-      'contract Sub Type': "Contract",
-      owner: "Administrator",
-      programOnly: false,
-      sourceType: "New",
+      'owner': "Administrator",
+      'program Only': false,
+      'source Type': "New",
     }),
   },
-  {
-    name: "Business Segment",
-    data: Object.entries({
-      'import Action': "add Modify",
-      'business Segment Template Name': "Business Segment",
-      'section Name': "Business Segment",
-    }),
-  },
+  // {
+  //   name: "Business Segment",
+  //   data: Object.entries({
+  //     'import Action': "add Modify",
+  //     'business Segment Template Name': "Business Segment",
+  //     'section Name': "Business Segment",
+  //   }),
+  // },
   {
     name: "Product Group",
     data: Object.entries({
