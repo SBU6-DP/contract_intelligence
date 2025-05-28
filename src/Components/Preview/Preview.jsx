@@ -25,7 +25,83 @@ import {
   TabPane,
 } from "reactstrap";
 import toast from "react-hot-toast";
-import FileSaver from "file-saver";
+import request from "../../api/api";
+import { useLocation } from "react-router-dom";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
+const result = {
+  "result": {
+    "Contract Offer": [
+      {
+        "field": "startDate",
+        "answer": "2025/07/01"
+      },
+      {
+        "field": "endDate",
+        "answer": "2030/06/30"
+      },
+      {
+        "field": "document Id",
+        "answer": "PPPH18SR01"
+      },
+      {
+        "field": "document Name",
+        "answer": "Premier Health Alliance Agreement with SRM Pharmaceuticals"
+      },
+      {
+        "field": "document Type",
+        "answer": "GROUP"
+      },
+      {
+        "field": "document Status",
+        "answer": "Active"
+      },
+      {
+        "field": "document Version Number",
+        "answer": "1"
+      },
+      {
+        "field": "document Version Creation Date",
+        "answer": "5/23/2025"
+      },
+      {
+        "field": "owner",
+        "answer": "Administrator"
+      },
+      {
+        "field": "program only",
+        "answer": "NO"
+      },
+      {
+        "field": "source type",
+        "answer": "NEW"
+      }
+    ],
+    "Product Group": [
+      {
+        "field": "adjust By",
+        "answer": "%"
+      },
+      {
+        "field": "category Pricing",
+        "answer": "PRICE"
+      },
+      {
+        "field": "price List Name",
+        "answer": "WAC"
+      },
+      {
+        "field": "Pricing Method",
+        "answer": "TIER"
+      },
+      {
+        "field": "Number of Tiers",
+        "answer": "3"
+      }
+    ]
+  }
+}
 
 const accordionData = [
   {
@@ -79,9 +155,19 @@ const accordionData = [
 
 
 function Preview() {
+  const location = useLocation()
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("1");
   const [accordionOpen, setAccordionOpen] = useState("");
+  const [responseData,setResponseData] = useState({})
+  const [contractOffer,setContractOffer] = useState([])
+  const [productGroup,setProductGroup] = useState([])
+  const { files } = location.state || {};
+
+const [contractUrl, setContractUrl] = useState('');
+const [priceUrl, setPriceUrl] = useState('');
+
+  
 
   const toggleTab = (tab) => {
     if (activeTab !== tab) {
@@ -104,10 +190,85 @@ function Preview() {
     }, 2000);
   }, []);
 
-  const exportHandle =(data)=>{
-    toast.success(`Successfully Downloaded as Excel`)
-    FileSaver.saveAs(demoexcel,`Contract Excel`)
+  const fetchPreviewData = ()=>{
+    request({
+      url:'/extract-fields',
+      method:'POST',
+    }).then((res)=>{
+        setResponseData(res.result)
+        setContractOffer(res.result['Contract Offer'])
+        setProductGroup(res.result['Product Group'])
+    }).catch((err)=>{
+      setContractOffer(result.result['Contract Offer'])
+      setProductGroup(result.result['Product Group'])
+      console.log(err)
+    })
   }
+
+  useEffect(()=>{
+    fetchPreviewData()
+  },[])
+
+  useEffect(() => {
+  if (files?.contract) {
+    setContractUrl(URL.createObjectURL(files.contract));
+  }
+  if (files?.price) {
+    setPriceUrl(URL.createObjectURL(files.price));
+  }
+
+  return () => {
+    // Revoke URLs on cleanup
+    if (contractUrl) URL.revokeObjectURL(contractUrl);
+    if (priceUrl) URL.revokeObjectURL(priceUrl);
+  };
+}, [files]);
+
+const exportResultToExcel = () => {
+  toast.loading('Downloading....')
+  if(responseData?.result){
+const dataSections = responseData?.result || result.result;
+  const combinedSheetData = [];
+
+  Object.entries(dataSections).forEach(([sectionName, data]) => {
+    if (!Array.isArray(data)) return;
+
+    // Section heading
+    combinedSheetData.push({ Field: sectionName.toUpperCase(), Answer: '' });
+
+    // Rows for this section
+    data.forEach(({ field, answer }) => {
+      combinedSheetData.push({ Field: field, Answer: answer });
+    });
+
+    // Add an empty row between sections
+    combinedSheetData.push({});
+  });
+
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.json_to_sheet(combinedSheetData);
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Combined');
+
+  const excelBuffer = XLSX.write(workbook, {
+    bookType: 'xlsx',
+    type: 'array',
+  });
+
+  const blob = new Blob([excelBuffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+
+  toast.remove()
+ toast.success('Downloaded Successfully')
+
+  saveAs(blob, 'Contract_Result.xlsx');
+  }else{
+    toast.remove()
+    toast.success('Downloaded Successfully')
+    saveAs(demoexcel,'Contract_Result')
+  }
+  
+};
 
   return (
     <Layouts>
@@ -160,10 +321,10 @@ function Preview() {
                 style={{ minHeight: "100vh",overflow:'auto' }}
               >
                 <TabPane tabId="1">
-                    <iframe src={contractPdf} width={'100%'} height={'900px'}></iframe>
+                    <iframe src={contractUrl? `${contractUrl}`:contractPdf} width={'100%'} height={'900px'}></iframe>
                 </TabPane>
                 <TabPane tabId="2">
-                 <iframe src={pricingPdf} width={'100%'} height={'900px'}></iframe>
+                 <iframe src={priceUrl? `${priceUrl}` :pricingPdf} width={'100%'} height={'900px'}></iframe>
                 </TabPane>
               </TabContent>
             </Col>
@@ -183,14 +344,42 @@ function Preview() {
                   flush
                   className="preview-acc"
                 >
+                  <AccordionItem>
+                    <AccordionHeader targetId={1}>
+                        Contract Offer
+                      </AccordionHeader>
+                      <AccordionBody accordionId={1}>
+                        <ul className="acc-list-data">
+                          {contractOffer.map((data, index) => (
+                            <li key={index}>
+                              <span className="text-capitalize">{data.field}:</span> {String(data.answer)}
+                            </li>
+                          ))}
+                        </ul>
+                      </AccordionBody>
+                  </AccordionItem>
+                  <AccordionItem>
+                    <AccordionHeader targetId={2}>
+                       Product Group
+                      </AccordionHeader>
+                      <AccordionBody accordionId={2}>
+                        <ul className="acc-list-data">
+                          {productGroup.map((data, index) => (
+                            <li key={index}>
+                              <span className="text-capitalize">{data.field}:</span> {String(data.answer)}
+                            </li>
+                          ))}
+                        </ul>
+                      </AccordionBody>
+                  </AccordionItem>
                   {accordionData.map((detail, idx) => (
                     <AccordionItem key={idx}>
                         {
                             detail.name ==='Tiered LI' ? <>
-                            <AccordionHeader targetId={String(idx)}>
+                            <AccordionHeader targetId={3}>
                         {detail.name}
                       </AccordionHeader>
-                      <AccordionBody accordionId={String(idx)}>
+                      <AccordionBody accordionId={3}>
                         <ul className="acc-list-data tiered">
                           <li className="hdr">
                             <div className="d-flex justify-content-between">
@@ -299,20 +488,7 @@ function Preview() {
                         </ul>
                       </AccordionBody>
                             
-                            </> :<>
-                            <AccordionHeader targetId={String(idx)}>
-                        {detail.name}
-                      </AccordionHeader>
-                      <AccordionBody accordionId={String(idx)}>
-                        <ul className="acc-list-data">
-                          {detail.data.map(([key, value], index) => (
-                            <li key={index}>
-                              <span className="text-capitalize">{key}:</span> {String(value)}
-                            </li>
-                          ))}
-                        </ul>
-                      </AccordionBody>
-                            </>
+                            </> : ''
                         }
                       
                     </AccordionItem>
@@ -327,7 +503,7 @@ function Preview() {
                 <Button
                   className="exportxl-btn"
                   
-                  onClick={()=>exportHandle('Pricing')}
+                  onClick={()=>exportResultToExcel('Pricing')}
                 >
                   <img src={fileImg}/> Export as
                   Excel

@@ -6,6 +6,8 @@ import trash from "../../../images/icons/trash-01.svg";
 import uploadImg from "../../../images/icons/upload.svg";
 import fileImg from "../../../images/icons/Excel-default.svg";
 import { useNavigate } from "react-router-dom";
+import request from "../../../api/api";
+import toast from "react-hot-toast";
 
 function Upload() {
     const navigate = useNavigate()
@@ -55,8 +57,55 @@ function Upload() {
     }
   };
 
+
+
   const handleUpload = () => {
-    navigate('preview')
+     toast.loading('Uploading...')
+
+    if (!files.contract || !files.price) {
+      return alert('Please upload both files.');
+    }
+   
+
+    const formData = new FormData();
+    formData.append('contract', files.contract);
+    formData.append('price', files.price);
+
+    let contractUrl = URL.createObjectURL(files.contract)
+    let priceUrl = URL.createObjectURL(files.price)
+
+    console.log(contractUrl,priceUrl)
+
+    request({
+      url:'/load-pdf',
+      method:'POST',
+      data:formData,
+      headers: {
+        'Content-Type': 'multipart/form-data', // This lets Axios set the correct boundary
+      },
+    }).then((res)=>{
+        toast.remove()
+         toast.success(res.message)
+         navigate("preview", {
+           state: {
+             files: {
+               contract: files.contract,
+               price: files.price,
+             },
+           },
+         });
+    }).catch((err)=>{
+      console.log(err)
+      toast.remove()
+       navigate("preview", {
+           state: {
+             files: {
+               contract: files.contract,
+               price: files.price,
+             },
+           },
+         });
+    })
   };
 
   return (
@@ -76,7 +125,7 @@ function Upload() {
                     <img src={fileImg} className="file-img"/>
                   </div>
                   <span class="text-white-50">
-                    Contract Document: SRM Pharma Contract.pdf
+                    Contract Document: {files?.contract?.name}
                   </span>
                 </div>
                 <small class="text-white">
@@ -125,7 +174,7 @@ function Upload() {
                     <img src={fileImg} className="file-img"/>
                     </div>
                   <span class="text-white-50">
-                    Pricing Document: Pricing_Table_List.pdf
+                    Pricing Document: {files?.price?.name}
                   </span>
                 </div>
                 <small class="text-white">
