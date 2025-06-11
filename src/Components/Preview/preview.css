@@ -20,13 +20,13 @@
 }
 
 .left-nav{
-
+    margin-top: 70px;
 }
 
 .right-tab{
     background-color: #161B26;
     position: fixed;
-    top: 75px;
+    top: 140px;
     right: 0;
     z-index: 1;
     height: 92vh;
@@ -81,9 +81,17 @@
 }
 
 .preview-acc-box {
-  max-height:650px; /* Adjust based on layout */
+  min-height: 600px;
+  max-height:600px; /* Adjust based on layout */
   overflow-y: scroll;
   padding-right: 8px; /* prevent content cutoff */
+}
+
+@media only screen and (min-width: 1700px) {
+  .preview-acc-box {
+    min-height: 800px;
+    max-height: 800px;
+  }
 }
 
 /* Hide scrollbar in Webkit-based browsers */
@@ -95,11 +103,12 @@
 /* For Firefox */
 .preview-acc-box {
   scrollbar-width: none; /* Firefox */
+  padding: 0px;
 }
 
 .preview-acc .accordion-button.collapsed{
-    background-color: #262A33!important;
-    padding: 11px 12px;
+    background-color: #161B26!important;
+    padding: 11px 12px 11px 24px;
     font-size: 18px;
     font-weight: 600;
 }
@@ -107,24 +116,40 @@
 .preview-acc .accordion-button:not(.collapsed){
     background-color: #262A33!important;
     color: white!important;
-    padding: 12px;
+    padding: 11px 12px 11px 24px;
     font-size: 18px;
     font-weight: 600;
 }
 
 .acc-list-data {
-    padding: 0px;
+    padding: 10px 24px;
+    margin: 0px;
+    border-top: 1px solid #333741;
 }
 
 .acc-head{
     /* border-bottom: 1px solid #1F242F; */
+    padding: 22px 24px;
+    border-bottom: 1px solid #333741;
+    margin: 0px;
 }
 
 .preview-acc .accordion-body{
-    background-color: #161B26;
+    background-color: #262A33;
     border-radius: 0px;
     height: max-content;
     padding: 10px 0px;
+}
+
+.preview-acc .tiered-body .accordion-body{
+    background-color: #262A33;
+    border-radius: 0px;
+    height: max-content;
+    padding: 1px 0px;
+}
+
+.preview-acc{
+    padding: 0px;
 }
 
 .acc-list-data li{
@@ -140,6 +165,19 @@
 .acc-list-data .hdr{
     padding-bottom: 20px;
 }
+
+.acc-list-data .hdr h6{
+    font-size: 16px;
+    font-weight: 400;
+    color: #CECFD2;
+}
+
+.acc-list-data .hdr .cnt{
+    font-size: 18px;
+    font-weight: 600;
+    color: #F5F5F6;
+}
+
 
 .export-btn{
     border-top: 1px solid #1F242F;
@@ -169,12 +207,24 @@
 
 .acc-list-data.tiered{
     border: 1px solid #1F242F;
+    margin: 16px;
+    background-color: #0C111D;
     padding: 16px;
+    border-radius: 4px;
 }
 
+.acc-list-data.tiered .ndc-bg {
+    background-color: #161B26;
+    padding: 10px;
+    width: 49%;
+}
 
 .acc-list-data.tiered .ndc-num span{
     font-size: 12px;
+}
+
+.acc-list-data.tiered .ndc-num .tier-span{
+    font-size: 16px;
 }
 
 .acc-list-data.tiered .ndc-num h5{
@@ -185,8 +235,16 @@
     font-size: 12px;
 }
 
+.acc-list-data.tiered .wac-price .tier-span{
+    font-size: 16px;
+}
+
 .acc-list-data.tiered .wac-price h5{
     font-size: 18px;
+}
+
+.acc-list-data .split-li-sum{
+    padding: 12px 0px;
 }
 
 .acc-list-data .split-li{
@@ -204,4 +262,25 @@
     color: #94969C;
 }
 
+
+.loading-contract{
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.doc-nav{
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    top: 80px;
+    padding: 0px 30px;
+    width: 94%;
+    height: 60px;
+    background-color: #0C111D;
+    border-bottom: 1px solid #1F242F;
+}
 

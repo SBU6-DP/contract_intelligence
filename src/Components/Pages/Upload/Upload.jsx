@@ -10,11 +10,8 @@ import request from "../../../api/api";
 import toast from "react-hot-toast";
 
 function Upload() {
-    const navigate = useNavigate()
-  const [files, setFiles] = useState({
-    contract: null,
-    price: null,
-  });
+  const navigate = useNavigate();
+  const [files, setFiles] = useState([]);
 
   const [uploadProgress, setUploadProgress] = useState({
     price: 0,
@@ -24,88 +21,85 @@ function Upload() {
   console.log(uploadProgress);
 
   const handleFileChange = (e, type) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setFiles((prev) => ({ ...prev, [type]: file }));
+    const selectedFiles = Array.from(e.target.files);
+    if (!selectedFiles.length) return;
 
-    // Simulate upload for price document
-    if (type === "price") {
+    const newFiles = selectedFiles.map((file, index) => ({
+      id: Date.now() + index,
+      file,
+      type,
+      progress: 0,
+    }));
+
+    setFiles((prev) => [...prev, ...newFiles]);
+
+    newFiles.forEach((fileObj) => {
       let progress = 0;
       const interval = setInterval(() => {
         progress += 5;
-        setUploadProgress({ ...uploadProgress, price: progress });
+        setFiles((prevFiles) =>
+          prevFiles.map((f) => (f.id === fileObj.id ? { ...f, progress } : f))
+        );
         if (progress >= 100) clearInterval(interval);
       }, 200);
-    }
-    if (type === "contract") {
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 5;
-        setUploadProgress({ ...uploadProgress, contract: progress });
-        if (progress >= 100) clearInterval(interval);
-      }, 200);
-    }
+    });
   };
 
-  const removeFile = (type) => {
-    setFiles((prev) => ({ ...prev, [type]: null }));
-    if (type === "price") {
-      setUploadProgress({ ...uploadProgress, price: 0 });
-    }
-    if (type === "contract") {
-      setUploadProgress({ ...uploadProgress, contract: 0 });
-    }
-  };
-
-
+  const removeFile = (id) => {
+  setFiles((prev) => prev.filter((f) => f.id !== id));
+};
 
   const handleUpload = () => {
-     toast.loading('Uploading...')
+    toast.loading("Uploading...", {
+      duration: Infinity,
+    });
 
-    if (!files.contract || !files.price) {
-      return alert('Please upload both files.');
-    }
-   
+    // if (!files.contract || !files.price) {
+    //   return alert("Please upload both files.");
+    // }
 
-    const formData = new FormData();
-    formData.append('contract', files.contract);
-    formData.append('price', files.price);
+    // const formData = new FormData();
+    // formData.append("contract_document", files.contract);
+    // formData.append("list_price_document", files.price);
 
-    let contractUrl = URL.createObjectURL(files.contract)
-    let priceUrl = URL.createObjectURL(files.price)
+    // let contractUrl = URL.createObjectURL(files.contract);
+    // let priceUrl = URL.createObjectURL(files.price);
 
-    console.log(contractUrl,priceUrl)
+    // console.log(contractUrl, priceUrl);
 
-    request({
-      url:'/load-pdf',
-      method:'POST',
-      data:formData,
-      headers: {
-        'Content-Type': 'multipart/form-data', // This lets Axios set the correct boundary
-      },
-    }).then((res)=>{
-        toast.remove()
-         toast.success(res.message)
-         navigate("preview", {
-           state: {
-             files: {
-               contract: files.contract,
-               price: files.price,
-             },
-           },
-         });
-    }).catch((err)=>{
-      console.log(err)
-      toast.remove()
-       navigate("preview", {
-           state: {
-             files: {
-               contract: files.contract,
-               price: files.price,
-             },
-           },
-         });
-    })
+    // request({
+    //   url: "/contract2xml/contract/load-pdf",
+    //   method: "POST",
+    //   data: formData,
+    // })
+    //   .then((res) => {
+    //     toast.remove();
+    //     toast.success(res.message);
+    //     navigate("preview", {
+    //       state: {
+    //         files: {
+    //           contract: files.contract,
+    //           price: files.price,
+    //         },
+    //         pricing: res?.pricing,
+    //       },
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     toast.error("Network Error");
+    //     // toast.remove()
+    //     //  navigate("preview", {
+    //     //      state: {
+    //     //        files: {
+    //     //          contract: files.contract,
+    //     //          price: files.price,
+    //     //        },
+    //     //      },
+    //     //    });
+    //   });
+    toast.remove()
+    navigate('/list/preview')
   };
 
   return (
@@ -115,58 +109,69 @@ function Upload() {
         <p class="upload-info">
           Your documents should be uploaded as a PDF file (maximum size 100MB).
         </p>
-
-        {files.contract ? (
-          <>
-            <div class="bg-secondary bg-opacity-10 p-3 rounded mb-3 uploaded-box ">
-              <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                  <div className="me-2">
-                    <img src={fileImg} className="file-img"/>
-                  </div>
-                  <span class="text-white-50">
-                    Contract Document: {files?.contract?.name}
-                  </span>
-                </div>
-                <small class="text-white">
-                  <i>
-                    {uploadProgress.contract === 100 ? (
-                      <img src={trash} className="trash-img"  onClick={()=>removeFile('contract')}/>
-                    ) : (
-                      `${uploadProgress.contract}% uploaded...`
-                    )}
-                  </i>
-                </small>
-              </div>
-              {uploadProgress.contract < 100 && (
-                <div class="progress mt-2">
-                  <div
-                    class="progress-bar bg-gradient"
-                    style={{ width: `${uploadProgress.contract}%` }}
-                  ></div>
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
+        <>
           <div class="upload-box mb-4">
             <label for="contractUpload" class="upload-area">
-              <img src={upload_doc}  />
-              <p class="mt-2 text-white-50">
+              <img src={upload_doc} />
+              <span class="text-white-50">
                 <u>Upload your Contract Document</u>
-              </p>
+              </span>
               <input
                 type="file"
                 id="contractUpload"
                 class="d-none upload-input"
                 accept="application/pdf"
+                multiple
                 onChange={(e) => handleFileChange(e, "contract")}
               />
             </label>
           </div>
-        )}
+          <div className="upload-list-box">
+               {files
+            .filter((f) => f.type === "contract")
+            .map((fileObj) => (
+              <div
+                key={fileObj.id}
+                className=" bg-opacity-10 p-3 rounded mb-3 uploaded-box"
+              >
+                <div className="d-flex align-items-center justify-content-between">
+                  <div className="d-flex align-items-center">
+                    <div className="me-2">
+                      <img src={fileImg} className="file-img" />
+                    </div>
+                    <span className="text-white-50">
+                      Contract Document: {fileObj.file.name}
+                    </span>
+                  </div>
+                  <small className="text-white">
+                    <i>
+                      {fileObj.progress === 100 ? (
+                        <img
+                          src={trash}
+                          className="trash-img"
+                          onClick={() => removeFile(fileObj.id)}
+                        />
+                      ) : (
+                        `${fileObj.progress}% uploaded...`
+                      )}
+                    </i>
+                  </small>
+                </div>
+                {fileObj.progress < 100 && (
+                  <div className="progress mt-2">
+                    <div
+                      className="progress-bar bg-gradient"
+                      style={{ width: `${fileObj.progress}%` }}
+                    ></div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+       
+        </>
 
-        {files.price ? (
+        {/* {files.price ? (
            <div class="bg-secondary bg-opacity-10 p-3 rounded mb-3 uploaded-box ">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
@@ -212,10 +217,29 @@ function Upload() {
               />
             </label>
           </div>
-        )}
+        )} */}
 
-        {files.contract && files.price ? (
-          <button class="upload-btn" onClick={()=>handleUpload()}>
+        {/* <div class="upload-box">
+            <label for="priceUpload" class="upload-area">
+              <img src={upload_doc} />
+              <p class="mt-2 text-white-50">
+                <u>Upload your List Price Document</u>
+              </p>
+              <input
+                type="file"
+                id="priceUpload"
+                class="d-none  upload-input"
+                accept="application/pdf"
+                onChange={(e) => handleFileChange(e, "price")}
+              />
+            </label>
+          </div> */}
+
+        
+      </div>
+      <div className="text-center">
+        {files.length>0 ? (
+          <button class="upload-btn" onClick={() => handleUpload()}>
             <img src={uploadImg} /> Upload
           </button>
         ) : (

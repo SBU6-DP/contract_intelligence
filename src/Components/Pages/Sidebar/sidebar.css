@@ -20,7 +20,7 @@
 
 .sidebar-logo-box{
     width: 100%;
-    margin: 32px auto;
+    margin:24px auto 24px auto;
     display: flex;
     justify-content: center;
     align-items: center;

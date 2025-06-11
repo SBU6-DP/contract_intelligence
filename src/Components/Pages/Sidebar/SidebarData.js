@@ -26,11 +26,11 @@ export const SidebarData =[
       // },
       {
         navItem: '',
-        id: 'upload',
+        id: 'list',
         // show: false,
         img: fileCheck,
         // imgSelected: learningSupportSelected,
-        link: '/upload',
+        link: '/list',
         bgShade: 'linear-gradient(to right,rgb(0, 137, 249),rgb(0, 55, 255))',
       },
      

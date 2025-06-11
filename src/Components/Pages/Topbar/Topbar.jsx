@@ -22,49 +22,47 @@ function Topbar() {
 
   console.log(accounts)
     return (
-        <nav className="header" role="navigation">
-    <div className="header-left">
-      <h6 className="nav-title">
-      {/* <img src={nexus}/> */}
-      <img src={srm_white_logo} className="sidebar-logo"/> 
-     Contract Intelligence
-      </h6>
-    </div>
-    <div className="header-right">
-      {/* <div className="header-icon">
+      <nav className="header" role="navigation">
+        <div className="header-left">
+          <h6 className="nav-title">
+            {/* <img src={nexus}/> */}
+            {/* <img src={srm_white_logo} className="sidebar-logo" /> */}
+            IntelliContract
+          </h6>
+        </div>
+        <div className="header-right">
+          {/* <div className="header-icon">
         <img src={messageIcon} alt="Message" />
       </div> */}
-      {/* <div className="header-icon">
+          {/* <div className="header-icon">
         <img src={bellIcon} alt="Notification" />
       </div> */}
 
-      <span >
-        
-      </span>
-      <div className="header-profile">
-        <div className="d-flex align-items-center gap-2">
-                <img src={bell} className='header-notifi'/>
-                <img
-                  src={profile}
-                  className="profile-img"
-                  alt="Profile"
-                  title={`${accounts[0]?.name}`}
-                />
-          {/* <img src={dropdown} alt="Dropdown" /> */}
+          <span></span>
+          <div className="header-profile">
+            <div className="d-flex align-items-center gap-2">
+              <img src={bell} className="header-notifi" />
+              <img
+                src={profile}
+                className="profile-img"
+                alt="Profile"
+                title={`${accounts[0]?.name}`}
+              />
+              {/* <img src={dropdown} alt="Dropdown" /> */}
+            </div>
+            <ul className="header-profile-dropdown">
+              <Link to={"/profile"}>
+                <li>My Profile</li>
+              </Link>
+              {/* <li>Manage Address</li> */}
+              <li className="logout" onClick={() => handleLogout()}>
+                Logout
+              </li>
+            </ul>
+          </div>
         </div>
-        <ul className="header-profile-dropdown">
-          <Link to={"/profile"}>
-            <li>My Profile</li>
-          </Link>
-          {/* <li>Manage Address</li> */}
-          <li className="logout" onClick={()=>handleLogout()}>
-            Logout
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-    )
+      </nav>
+    );
 }
 
 export default Topbar

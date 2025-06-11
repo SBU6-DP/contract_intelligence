@@ -5,7 +5,7 @@ import { SidebarData } from "./SidebarData";
 import nexus from '../../../images/Logo/NexusLabs-Logo.png'
 import hide_sidebar from '../../../images/icons/left_close.png'
 
-import logo from '../../../images/sidebar_icons/Logomark.svg'
+import logo from '../../../images/sidebar_icons/SRM-logo.svg'
 import settings from '../../../images/icons/settings-01.svg'
 
 function Sidebar() {

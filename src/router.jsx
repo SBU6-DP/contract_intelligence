@@ -13,6 +13,7 @@ import Hcp from "./Components/Pages/HCP/Hcp";
 import NewHcp from "./Components/Pages/HCP/NewHcp";
 import Upload from "./Components/Pages/Upload/Upload";
 import Preview from "./Components/Preview/Preview";
+import ContractFile from "./Components/Pages/ContractFile/ContractFile";
 
 const dashboardRoutes = [
   {
@@ -111,21 +112,26 @@ const hcpRouters = [
 
 const uploadRouters = [
   {
+    path: "/list",
     handle: {
       crumb: () => (
-        <NavLink to="/upload" className="breadcrumb-link">
+        <NavLink to="/list" className="breadcrumb-link">
           Upload
         </NavLink>
       ),
-      activeMenuId: 'upload',
+      activeMenuId: "list",
     },
     children: [
       {
-        path: '/upload',
+        index: true,
+        element: <ContractFile />,
+      },
+      {
+        path: "/list/upload",
         element: <Upload />,
       },
       {
-        path: '/upload/preview',
+        path: "/list/preview",
         element: <Preview />,
       },
     ],
