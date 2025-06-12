@@ -36,8 +36,8 @@ function Login() {
   };
 
   const login = () => {
-    // instance.loginRedirect({ scopes: ["user.read"] });
-    navigate('/upload')
+    instance.loginRedirect({ scopes: ["user.read"] });
+    // navigate('/upload')
   };
   return (
     <div className="container-fluid login-bg">
@@ -46,7 +46,7 @@ function Login() {
           <div className="login-left">
             <div className="login-part">
               <div className="login-head">
-                <h4>Contract Intelligence</h4>
+                <h4>IntelliContract</h4>
                 <h6>Welcome back! Please enter your details.</h6>
               </div>
               <div className="login-form">
@@ -80,7 +80,7 @@ function Login() {
               </div>
             </div>
              <div className="login-footer text-center">
-                © SRM Technologies Private Limited 2025
+                © SRM Technologies Private Limited {new Date().getFullYear()}
             </div>
           </div>
         </div>
