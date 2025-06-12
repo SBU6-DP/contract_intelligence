@@ -30,6 +30,311 @@ import { useLocation } from "react-router-dom";
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
+const tier = {
+    "tier_summary": [
+        {
+            "tier_level": 1,
+            "purchase_volume_min": 0,
+            "purchase_volume_max": 249999,
+            "price_discount_percentage": 10.0,
+            "administrative_fee_percentage": 2.0,
+            "rebate_percentage": 0.0
+        },
+        {
+            "tier_level": 2,
+            "purchase_volume_min": 250000,
+            "purchase_volume_max": 999999,
+            "price_discount_percentage": 15.0,
+            "administrative_fee_percentage": 2.0,
+            "rebate_percentage": 1.5
+        },
+        {
+            "tier_level": 3,
+            "purchase_volume_min": 1000000,
+            "purchase_volume_max": null,
+            "price_discount_percentage": 20.0,
+            "administrative_fee_percentage": 3.0,
+            "rebate_percentage": 3.0
+        }
+    ],
+    "products": [
+        {
+            "ndc_number": "65483-1021-30",
+            "product_name": "Cardiolex 10mg",
+            "size": "30 tablets",
+            "wac_price": "$195.00",
+            "total_tiers": 3,
+            "tiers": [
+                {
+                    "tier": 1,
+                    "discount": "10%",
+                    "final_price": "$175.50",
+                    "savings": "$19.50"
+                },
+                {
+                    "tier": 2,
+                    "discount": "15%",
+                    "final_price": "$165.75",
+                    "savings": "$29.25"
+                },
+                {
+                    "tier": 3,
+                    "discount": "20%",
+                    "final_price": "$156.00",
+                    "savings": "$39.00"
+                }
+            ]
+        },
+        {
+            "ndc_number": "65483-1022-30",
+            "product_name": "Cardiolex 20mg",
+            "size": "30 tablets",
+            "wac_price": "$275.00",
+            "total_tiers": 3,
+            "tiers": [
+                {
+                    "tier": 1,
+                    "discount": "10%",
+                    "final_price": "$247.50",
+                    "savings": "$27.50"
+                },
+                {
+                    "tier": 2,
+                    "discount": "15%",
+                    "final_price": "$233.75",
+                    "savings": "$41.25"
+                },
+                {
+                    "tier": 3,
+                    "discount": "20%",
+                    "final_price": "$220.00",
+                    "savings": "$55.00"
+                }
+            ]
+        },
+        {
+            "ndc_number": "65483-1023-30",
+            "product_name": "Cardiolex 40mg",
+            "size": "30 tablets",
+            "wac_price": "$395.00",
+            "total_tiers": 3,
+            "tiers": [
+                {
+                    "tier": 1,
+                    "discount": "10%",
+                    "final_price": "$355.50",
+                    "savings": "$39.50"
+                },
+                {
+                    "tier": 2,
+                    "discount": "15%",
+                    "final_price": "$335.75",
+                    "savings": "$59.25"
+                },
+                {
+                    "tier": 3,
+                    "discount": "20%",
+                    "final_price": "$316.00",
+                    "savings": "$79.00"
+                }
+            ]
+        },
+        {
+            "ndc_number": "65483-2041-60",
+            "product_name": "Neurovex 25mg",
+            "size": "60 capsules",
+            "wac_price": "$425.00",
+            "total_tiers": 3,
+            "tiers": [
+                {
+                    "tier": 1,
+                    "discount": "10%",
+                    "final_price": "$382.50",
+                    "savings": "$42.50"
+                },
+                {
+                    "tier": 2,
+                    "discount": "15%",
+                    "final_price": "$361.25",
+                    "savings": "$63.75"
+                },
+                {
+                    "tier": 3,
+                    "discount": "20%",
+                    "final_price": "$340.00",
+                    "savings": "$85.00"
+                }
+            ]
+        },
+        {
+            "ndc_number": "65483-2042-60",
+            "product_name": "Neurovex 50mg",
+            "size": "60 capsules",
+            "wac_price": "$625.00",
+            "total_tiers": 3,
+            "tiers": [
+                {
+                    "tier": 1,
+                    "discount": "10%",
+                    "final_price": "$562.50",
+                    "savings": "$62.50"
+                },
+                {
+                    "tier": 2,
+                    "discount": "15%",
+                    "final_price": "$531.25",
+                    "savings": "$93.75"
+                },
+                {
+                    "tier": 3,
+                    "discount": "20%",
+                    "final_price": "$500.00",
+                    "savings": "$125.00"
+                }
+            ]
+        },
+        {
+            "ndc_number": "65483-2043-60",
+            "product_name": "Neurovex 100mg",
+            "size": "60 capsules",
+            "wac_price": "$895.00",
+            "total_tiers": 3,
+            "tiers": [
+                {
+                    "tier": 1,
+                    "discount": "10%",
+                    "final_price": "$805.50",
+                    "savings": "$89.50"
+                },
+                {
+                    "tier": 2,
+                    "discount": "15%",
+                    "final_price": "$760.75",
+                    "savings": "$134.25"
+                },
+                {
+                    "tier": 3,
+                    "discount": "20%",
+                    "final_price": "$716.00",
+                    "savings": "$179.00"
+                }
+            ]
+        },
+        {
+            "ndc_number": "65483-3051-01",
+            "product_name": "Immunolex 150mg Injection",
+            "size": "1 vial",
+            "wac_price": "$1250.00",
+            "total_tiers": 3,
+            "tiers": [
+                {
+                    "tier": 1,
+                    "discount": "10%",
+                    "final_price": "$1125.00",
+                    "savings": "$125.00"
+                },
+                {
+                    "tier": 2,
+                    "discount": "15%",
+                    "final_price": "$1062.50",
+                    "savings": "$187.50"
+                },
+                {
+                    "tier": 3,
+                    "discount": "20%",
+                    "final_price": "$1000.00",
+                    "savings": "$250.00"
+                }
+            ]
+        },
+        {
+            "ndc_number": "65483-3052-01",
+            "product_name": "Immunolex 300mg Injection",
+            "size": "1 vial",
+            "wac_price": "$2450.00",
+            "total_tiers": 3,
+            "tiers": [
+                {
+                    "tier": 1,
+                    "discount": "10%",
+                    "final_price": "$2205.00",
+                    "savings": "$245.00"
+                },
+                {
+                    "tier": 2,
+                    "discount": "15%",
+                    "final_price": "$2082.50",
+                    "savings": "$367.50"
+                },
+                {
+                    "tier": 3,
+                    "discount": "20%",
+                    "final_price": "$1960.00",
+                    "savings": "$490.00"
+                }
+            ]
+        },
+        {
+            "ndc_number": "65483-4071-01",
+            "product_name": "Respiraclear 50mcg Inhaler",
+            "size": "1 inhaler",
+            "wac_price": "$185.00",
+            "total_tiers": 3,
+            "tiers": [
+                {
+                    "tier": 1,
+                    "discount": "10%",
+                    "final_price": "$166.50",
+                    "savings": "$18.50"
+                },
+                {
+                    "tier": 2,
+                    "discount": "15%",
+                    "final_price": "$157.25",
+                    "savings": "$27.75"
+                },
+                {
+                    "tier": 3,
+                    "discount": "20%",
+                    "final_price": "$148.00",
+                    "savings": "$37.00"
+                }
+            ]
+        },
+        {
+            "ndc_number": "65483-4072-01",
+            "product_name": "Respiraclear 100mcg Inhaler",
+            "size": "1 inhaler",
+            "wac_price": "$245.00",
+            "total_tiers": 3,
+            "tiers": [
+                {
+                    "tier": 1,
+                    "discount": "10%",
+                    "final_price": "$220.50",
+                    "savings": "$24.50"
+                },
+                {
+                    "tier": 2,
+                    "discount": "15%",
+                    "final_price": "$208.25",
+                    "savings": "$36.75"
+                },
+                {
+                    "tier": 3,
+                    "discount": "20%",
+                    "final_price": "$196.00",
+                    "savings": "$49.00"
+                }
+            ]
+        }
+    ],
+    "summary": {
+        "total_products": 10,
+        "total_tiers": 3
+    }
+}
+
 const result = {
   "result": {
     "Contract Offer": [
@@ -153,6 +458,15 @@ const accordionData = [
   },
 ];
 
+const loadingStatus =[
+  "Analyzing your PDF...",
+  "Looking for key data points and patterns…",
+  "Extracting contract offer, business segment, product group, Tired LI summary...",
+  "Smart AI is reading between the lines…",
+  "Ensuring accuracy before showing results…",
+  "Ready! Loading your insights…",
+]
+
 
 function Preview() {
   const location = useLocation()
@@ -162,10 +476,12 @@ function Preview() {
   const [responseData,setResponseData] = useState({})
   const [contractOffer,setContractOffer] = useState([])
   const [productGroup,setProductGroup] = useState([])
+  const [tierData,setTierData] = useState({})
   const { files } = location.state || {};
 
 const [contractUrl, setContractUrl] = useState('');
 const [priceUrl, setPriceUrl] = useState('');
+const [statusIndex, setStatusIndex] = useState(0);
 
   
 
@@ -175,6 +491,16 @@ const [priceUrl, setPriceUrl] = useState('');
     }
   };
 
+    useEffect(() => {
+    if (!isLoading) return;
+
+    const interval = setInterval(() => {
+      setStatusIndex((prevIndex) => (prevIndex + 1) % loadingStatus.length);
+    }, 8000); // 10 seconds
+
+    return () => clearInterval(interval); // cleanup
+  }, [isLoading]);
+
   const toggleAccordion = (id) => {
     if (accordionOpen.includes(id)) {
       setAccordionOpen((prev) => prev.filter((item) => item !== id)); // remove if already open
@@ -183,24 +509,34 @@ const [priceUrl, setPriceUrl] = useState('');
     }
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, []);
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 2000);
+  // }, []);
+
+  useEffect(()=>{
+    if(location?.state?.pricing){
+      setTierData(location?.state?.pricing)
+    }else{
+      setTierData(tier)
+    }
+  },[location])
 
   const fetchPreviewData = ()=>{
+    setIsLoading(true)
     request({
-      url:'/extract-fields',
+      url:'/contract2xml/contract/extract-fields',
       method:'POST',
     }).then((res)=>{
-        setResponseData(res.result)
-        setContractOffer(res.result['Contract Offer'])
-        setProductGroup(res.result['Product Group'])
+      setIsLoading(false)
+        setResponseData(res.contract)
+        setContractOffer(res?.contract['Contract Offer'])
+        setProductGroup(res?.contract['Product Group'])
     }).catch((err)=>{
-      setContractOffer(result.result['Contract Offer'])
-      setProductGroup(result.result['Product Group'])
+      // setContractOffer(result.result['Contract Offer'])
+      // setProductGroup(result.result['Product Group'])
       console.log(err)
     })
   }
@@ -225,9 +561,9 @@ const [priceUrl, setPriceUrl] = useState('');
 }, [files]);
 
 const exportResultToExcel = () => {
-  toast.loading('Downloading....')
-  if(responseData?.result){
-const dataSections = responseData?.result || result.result;
+  toast.loading('Downloading....',{duration:Infinity})
+  if(responseData?.contract){
+const dataSections = responseData?.contract || result.result;
   const combinedSheetData = [];
 
   Object.entries(dataSections).forEach(([sectionName, data]) => {
@@ -272,18 +608,7 @@ const dataSections = responseData?.result || result.result;
 
   return (
     <Layouts>
-      {isLoading ? (
-        <>
-          <div className="container my-5 p-0">
-            <div className="w-50 m-auto text-center">
-              <img src={loadingImg} className="loadingimg" />
-              <h5 className="loading-info">
-                <i>Getting your contract entities ready...</i>
-              </h5>
-            </div>
-          </div>
-        </>
-      ) : (
+      
         <div className="container-fluid position-relative">
           <Row>
             {/* Left Side: File Preview */}
@@ -336,8 +661,17 @@ const dataSections = responseData?.result || result.result;
             >
               <div className="p-3 prev-acc-box">
                 <h6 className="text-light mb-3 acc-head">Contract Entities</h6>
-               
-               <div className="preview-acc-box">
+                {
+                  isLoading ? <>
+                    <div className="container my-5 p-0">
+            <div className="w-50 m-auto text-center">
+              <img src={loadingImg} className="loadingimg" />
+              <h5 className="loading-info">
+                <i>{loadingStatus[statusIndex]}</i>
+              </h5>
+            </div>
+          </div>
+                  </> :  <div className="preview-acc-box">
                  <Accordion
                   open={accordionOpen}
                   toggle={toggleAccordion}
@@ -372,15 +706,251 @@ const dataSections = responseData?.result || result.result;
                         </ul>
                       </AccordionBody>
                   </AccordionItem>
-                  {accordionData.map((detail, idx) => (
-                    <AccordionItem key={idx}>
-                        {
-                            detail.name ==='Tiered LI' ? <>
+
+                  <AccordionItem>
                             <AccordionHeader targetId={3}>
-                        {detail.name}
-                      </AccordionHeader>
-                      <AccordionBody accordionId={3}>
+                              Tiered Summary
+                            </AccordionHeader>
+                      <AccordionBody accordionId={3} className="tiered-body">
+                        {tierData?.tier_summary?.map((list, idx) => {
+                          return (
+                            <ul className="acc-list-data tiered">
+                              <li className="hdr">
+                                <h6>
+                                  Tier Level :{" "}
+                                  <span className="cnt">0{idx + 1}</span>{" "}
+                                </h6>
+                              </li>
+                              <li className="hdr">
+                                <div className="d-flex justify-content-between text-start">
+                                  <div className="ndc-num ndc-bg">
+                                    <span className="tier-span">
+                                      Purchase Volume Min
+                                    </span>
+                                    <h5>{list.purchase_volume_min ?? "-"}</h5>
+                                  </div>
+                                  <div className="wac-price ndc-bg">
+                                    <span className="tier-span">
+                                      Purchase Volume Max
+                                    </span>
+                                    <h5 className="">
+                                      {list.purchase_volume_max ?? "-"}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </li>
+                              <li className="split-li-sum">
+                                <div className="d-flex justify-content-around">
+                                  <div className="ndc-num">
+                                    <h5>
+                                      <span className="tier-span">
+                                        Price Discount (%)
+                                      </span>{" "}
+                                    </h5>
+                                    <h5>
+                                      {list.price_discount_percentage}%
+                                    </h5>
+                                  </div>
+                                  <div className="ndc-num">
+                                    <h5>
+                                      <span className="tier-span">
+                                        Admin Fees(%)
+                                      </span>{" "}
+                                      
+                                    </h5>
+                                    <h5>{list.administrative_fee_percentage}%</h5>
+                                  </div>
+                                  <div className="ndc-num">
+                                    <h5>
+                                      <span className="tier-span">
+                                        Rebate(%)
+                                      </span>{" "}
+                                      
+                                    </h5>
+                                    <h5>{list.rebate_percentage}%</h5>
+                                  </div>
+                                </div>
+                              </li>
+                              {/* <li className="split-li">
+                                <div className="d-flex justify-content-between">
+                                  <div className="ndc-num">
+                                    <h5>
+                                      <span className="tier-span">
+                                        Administrative Fees Percentage :
+                                      </span>{" "}
+                                      {list.administrative_fee_percentage}%
+                                    </h5>
+                                  </div>
+                                </div>
+                              </li> */}
+                              {/* <li className="split-li">
+                            <div className="d-flex align-items-center justify-content-between tier-split">
+                                <div className="">
+                                    <h6>Tier 3</h6>
+                                </div>
+                                <div className="">
+                                    <h6><span>Discount </span>: 20%</h6>
+                                </div>
+                                <div>
+                                    <h6><span>Final Price</span> : $156</h6>
+                                </div>
+                            </div>
+                          </li> */}
+                            </ul>
+                          );
+                        })}
+                        {/* <ul className="acc-list-data tiered">
+                          <li className="hdr">
+                            <div className="d-flex justify-content-between">
+                                <div className="ndc-num">
+                                    <span>NDC Number</span>
+                                    <h5>65483-1021-30</h5>
+                                </div>
+                                <div className="wac-price">
+                                    <span>WAC Price</span>
+                                    <h5 className="text-end">$195</h5>
+                                </div>
+                            </div>
+                          </li>
+                          <li className="split-li">
+                            <div className="d-flex align-items-center justify-content-between tier-split">
+                                <div className="">
+                                    <h6>Tier 1</h6>
+                                </div>
+                                <div className="">
+                                    <h6><span>Discount </span>: 10%</h6>
+                                </div>
+                                <div>
+                                    <h6><span>Final Price</span> : $175.5</h6>
+                                </div>
+                            </div>
+                          </li>
+                          <li className="split-li">
+                            <div className="d-flex align-items-center justify-content-between tier-split">
+                                <div className="">
+                                    <h6>Tier 2</h6>
+                                </div>
+                                <div className="">
+                                    <h6><span>Discount </span>: 15%</h6>
+                                </div>
+                                <div>
+                                    <h6><span>Final Price</span> : $165.8</h6>
+                                </div>
+                            </div>
+                          </li>
+                          <li className="split-li">
+                            <div className="d-flex align-items-center justify-content-between tier-split">
+                                <div className="">
+                                    <h6>Tier 3</h6>
+                                </div>
+                                <div className="">
+                                    <h6><span>Discount </span>: 20%</h6>
+                                </div>
+                                <div>
+                                    <h6><span>Final Price</span> : $156</h6>
+                                </div>
+                            </div>
+                          </li>
+                        </ul>
                         <ul className="acc-list-data tiered">
+                          <li className="hdr">
+                            <div className="d-flex justify-content-between">
+                                <div className="ndc-num">
+                                    <span>NDC Number</span>
+                                    <h5>65483-2041-60</h5>
+                                </div>
+                                <div className="wac-price">
+                                    <span>WAC Price</span>
+                                    <h5 className="text-end">$425</h5>
+                                </div>
+                            </div>
+                          </li>
+                        </ul> */}
+                      </AccordionBody>
+                            
+                      
+                    </AccordionItem>
+                 
+                    <AccordionItem>
+                            <AccordionHeader targetId={4}>
+                              Tiered LI
+                            </AccordionHeader>
+                      <AccordionBody accordionId={4}>
+                        {
+                          tier?.products?.map((list)=>{
+                            return <ul className="acc-list-data tiered">
+                          <li className="hdr">
+                            <div className="d-flex justify-content-between">
+                                <div className="ndc-num">
+                                    <span>NDC Number</span>
+                                    <h5>{list?.ndc_number}</h5>
+                                </div>
+                                <div className="wac-price">
+                                    <span>WAC Price</span>
+                                    <h5 className="text-end">{list?.wac_price}</h5>
+                                </div>
+                            </div>
+                          </li>
+                          {
+                            list?.tiers?.map((tierData)=>{
+                                return <li className="split-li">
+                            <div className="d-flex align-items-center justify-content-between tier-split">
+                                <div className="">
+                                    <h6>Tier {tierData?.tier}</h6>
+                                </div>
+                                <div className="">
+                                    <h6><span>Discount </span>: {tierData?.discount}</h6>
+                                </div>
+                                <div>
+                                    <h6><span>Final Price</span> : {tierData?.final_price}</h6>
+                                </div>
+                            </div>
+                          </li>
+                            })
+                          }
+                          {/* <li className="split-li">
+                            <div className="d-flex align-items-center justify-content-between tier-split">
+                                <div className="">
+                                    <h6>Tier 1</h6>
+                                </div>
+                                <div className="">
+                                    <h6><span>Discount </span>: 10%</h6>
+                                </div>
+                                <div>
+                                    <h6><span>Final Price</span> : $175.5</h6>
+                                </div>
+                            </div>
+                          </li>
+                          <li className="split-li">
+                            <div className="d-flex align-items-center justify-content-between tier-split">
+                                <div className="">
+                                    <h6>Tier 2</h6>
+                                </div>
+                                <div className="">
+                                    <h6><span>Discount </span>: 15%</h6>
+                                </div>
+                                <div>
+                                    <h6><span>Final Price</span> : $165.8</h6>
+                                </div>
+                            </div>
+                          </li>
+                          <li className="split-li">
+                            <div className="d-flex align-items-center justify-content-between tier-split">
+                                <div className="">
+                                    <h6>Tier 3</h6>
+                                </div>
+                                <div className="">
+                                    <h6><span>Discount </span>: 20%</h6>
+                                </div>
+                                <div>
+                                    <h6><span>Final Price</span> : $156</h6>
+                                </div>
+                            </div>
+                          </li> */}
+                        </ul>
+                          })
+                        }
+                        {/* <ul className="acc-list-data tiered">
                           <li className="hdr">
                             <div className="d-flex justify-content-between">
                                 <div className="ndc-num">
@@ -485,17 +1055,14 @@ const dataSections = responseData?.result || result.result;
                                 </div>
                             </div>
                           </li> */}
-                        </ul>
+                        {/* </ul> */} */
                       </AccordionBody>
                             
-                            </> : ''
-                        }
                       
                     </AccordionItem>
-                  ))}
                 </Accordion>
                </div>
-                 
+                }
               </div>
 
               {/* Export Buttons */}
@@ -517,7 +1084,6 @@ const dataSections = responseData?.result || result.result;
             </Col>
           </Row>
         </div>
-      )}
     </Layouts>
   );
 }
