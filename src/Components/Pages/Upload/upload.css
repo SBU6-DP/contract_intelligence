@@ -63,7 +63,7 @@
 }
 
 .uploaded-box:hover{
-    background-color: #1F242F;
+    /* background-color: #1F242F; */
 }
 
 .upload-btn{
@@ -99,6 +99,20 @@
 .trash-img{
     width: 24px;
     height: 24px;
+}
+
+.trash-round{
+    width: 34px;
+    height: 34px;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.trash-round:hover{
+    background-color: #1F242F;
 }
 
 /* Scrollbar width */

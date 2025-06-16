@@ -78,7 +78,7 @@ margin-top: 20px;
 
 
 
-.Table-contract-list .s-no-box{
+.Table-contract-list .check-box-table{
     width: 30px;
 height: 44px;
 gap: 12px;
@@ -210,6 +210,10 @@ margin: 8px;
 }
 .total-contract .count-round.orange{
     background-color: #DC6803;
+}
+
+.contract-result-list{
+    cursor: pointer;
 }
 
 

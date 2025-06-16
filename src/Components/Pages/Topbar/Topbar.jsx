@@ -9,9 +9,11 @@ import bell from '../../../images/icons/bell-02.svg'
 import srm_white_logo from '../../../images/Logo/logo_srm_white.png'
 
 import nexus from '../../../images/Logo/NexusLabs-Logo.png'
+import { useTranslation } from 'react-i18next'
 
 function Topbar() {
     const navigate = useNavigate()
+    const { t, i18n } = useTranslation();
     const { instance,accounts} = useMsal();
 
   const handleLogout = () => {
@@ -32,10 +34,11 @@ function Topbar() {
         </div>
         <div className="header-right">
           {/* <div className="header-icon">
-        <img src={messageIcon} alt="Message" />
-      </div> */}
-          {/* <div className="header-icon">
-        <img src={bellIcon} alt="Notification" />
+           <button onClick={() => i18n.changeLanguage('en')}>English</button>
+      </div> 
+      <div className="header-icon">
+        <button onClick={() => i18n.changeLanguage('ja')}>日本語</button>
+     
       </div> */}
 
           <span></span>

@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import 'react-circular-progressbar/dist/styles.css';
 import 'react-loading-skeleton/dist/skeleton.css'
 import router from './router'
+import './i18n'
 
 function App() {
  

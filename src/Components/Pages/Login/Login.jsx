@@ -36,8 +36,8 @@ function Login() {
   };
 
   const login = () => {
-    instance.loginRedirect({ scopes: ["user.read"] });
-    // navigate('/upload')
+    // instance.loginRedirect({ scopes: ["user.read"] });
+    navigate('/list')
   };
   return (
     <div className="container-fluid login-bg">
@@ -57,15 +57,18 @@ function Login() {
                   </div>
                 </div>
                 <div className="login-password">
-                  <label className="">Passsword</label>
+                  <label className="">Password</label>
                   <div>
                     <input className="login-input" type="password" />
                   </div>
                 </div>
                 <div className="login-opt">
                   <div>
-                    <input type="checkbox" className="login-check" />
-                    <label>Remember me</label>
+                    <label class="checkbox-container">
+                      <input type="checkbox" />
+                      <span class="custom-checkbox"></span>
+                      Remember me
+                    </label>
                   </div>
                   <div>
                     <span>Forgot Password?</span>
@@ -75,7 +78,7 @@ function Login() {
                   <button>Sign in</button>
                 </div>
                 <div className="login-sso">
-                  <button onClick={()=>login()}>Login with SSO</button>
+                  <button onClick={()=>login()}>Sign in with SSO</button>
                 </div>
               </div>
             </div>

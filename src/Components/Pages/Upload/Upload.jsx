@@ -4,7 +4,7 @@ import "./upload.css";
 import upload_doc from "../../../images/upload_icons/upload_doc.svg";
 import trash from "../../../images/icons/trash-01.svg";
 import uploadImg from "../../../images/icons/upload.svg";
-import fileImg from "../../../images/icons/Excel-default.svg";
+import fileImg from "../../../images/icons/contract-file.svg";
 import { useNavigate } from "react-router-dom";
 import request from "../../../api/api";
 import toast from "react-hot-toast";
@@ -127,48 +127,49 @@ function Upload() {
             </label>
           </div>
           <div className="upload-list-box">
-               {files
-            .filter((f) => f.type === "contract")
-            .map((fileObj) => (
-              <div
-                key={fileObj.id}
-                className=" bg-opacity-10 p-3 rounded mb-3 uploaded-box"
-              >
-                <div className="d-flex align-items-center justify-content-between">
-                  <div className="d-flex align-items-center">
-                    <div className="me-2">
-                      <img src={fileImg} className="file-img" />
+            {files
+              .filter((f) => f.type === "contract")
+              .map((fileObj) => (
+                <div
+                  key={fileObj.id}
+                  className=" bg-opacity-10 p-3 rounded mb-3 uploaded-box"
+                >
+                  <div className="d-flex align-items-center justify-content-between">
+                    <div className="d-flex align-items-center">
+                      <div className="me-2">
+                        <img src={fileImg} className="file-img" />
+                      </div>
+                      <span className="text-white-50">
+                        Contract Document: {fileObj.file.name}
+                      </span>
                     </div>
-                    <span className="text-white-50">
-                      Contract Document: {fileObj.file.name}
-                    </span>
+                    <small className="text-white">
+                      <i>
+                        {fileObj.progress === 100 ? (
+                          <div className="trash-round">
+                            <img
+                              src={trash}
+                              className="trash-img"
+                              onClick={() => removeFile(fileObj.id)}
+                            />
+                          </div>
+                        ) : (
+                          `${fileObj.progress}% uploaded...`
+                        )}
+                      </i>
+                    </small>
                   </div>
-                  <small className="text-white">
-                    <i>
-                      {fileObj.progress === 100 ? (
-                        <img
-                          src={trash}
-                          className="trash-img"
-                          onClick={() => removeFile(fileObj.id)}
-                        />
-                      ) : (
-                        `${fileObj.progress}% uploaded...`
-                      )}
-                    </i>
-                  </small>
+                  {fileObj.progress < 100 && (
+                    <div className="progress mt-2">
+                      <div
+                        className="progress-bar bg-gradient"
+                        style={{ width: `${fileObj.progress}%` }}
+                      ></div>
+                    </div>
+                  )}
                 </div>
-                {fileObj.progress < 100 && (
-                  <div className="progress mt-2">
-                    <div
-                      className="progress-bar bg-gradient"
-                      style={{ width: `${fileObj.progress}%` }}
-                    ></div>
-                  </div>
-                )}
-              </div>
-            ))}
+              ))}
           </div>
-       
         </>
 
         {/* {files.price ? (
@@ -234,11 +235,9 @@ function Upload() {
               />
             </label>
           </div> */}
-
-        
       </div>
       <div className="text-center">
-        {files.length>0 ? (
+        {files.length > 0 ? (
           <button class="upload-btn" onClick={() => handleUpload()}>
             <img src={uploadImg} /> Upload
           </button>

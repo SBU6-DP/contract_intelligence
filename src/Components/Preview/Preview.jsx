@@ -29,7 +29,7 @@ import {
 } from "reactstrap";
 import toast from "react-hot-toast";
 import request from "../../api/api";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
@@ -472,6 +472,7 @@ const loadingStatus =[
 
 function Preview() {
   const location = useLocation();
+  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("1");
   const [accordionOpen, setAccordionOpen] = useState("");
@@ -536,10 +537,11 @@ function Preview() {
         setProductGroup(res?.contract["Product Group"]);
       })
       .catch((err) => {
-        // setIsLoading(false);
-        // setContractOffer(result.result['Contract Offer'])
-        // setProductGroup(result.result['Product Group'])
-        toast.error('Network Error')
+        setIsLoading(false);
+        setContractOffer(result.result['Contract Offer'])
+        setProductGroup(result.result['Product Group'])
+        setTierData(tier)
+        toast.success("Success")
         console.log(err);
       });
   };
@@ -615,16 +617,18 @@ function Preview() {
     <Layouts>
       <div className="container-fluid position-relative">
         <div className="doc-nav">
-            <div>
-              left
+            <div className="head-back">
+              <h5 onClick={()=>navigate('/list')}><img src={arrow_narrow_left}/>Contract Document-SM125678.PDF</h5>
             </div>
-            <div>
-              right
+            <div className="next-page">
+              <span><img src={left_arrow}/></span>
+              <span className="count-page"><span>01</span>/<span>12</span></span>
+              <span><img src={right_arrow}/></span>
             </div>
         </div>
         <Row>
           {/* Left Side: File Preview */}
-          <Col md="8" className="left-nav">
+          <Col lg="8" className="left-nav">
            <iframe
                   src={contractUrl ? `${contractUrl}` : contractPdf}
                   width={"100%"}
@@ -681,7 +685,7 @@ function Preview() {
 
           {/* Right Side: Contract Entities */}
           <Col
-            md="4"
+            lg="4"
             className="d-flex flex-column justify-content-between p-0 right-tab"
           >
             <div className="prev-acc-box">
@@ -904,7 +908,7 @@ function Preview() {
                     </AccordionItem>
 
                     <AccordionItem>
-                      <AccordionHeader targetId={4}>Tiered LI</AccordionHeader>
+                      <AccordionHeader className="tiered-head" targetId={4}>Tiered LI</AccordionHeader>
                       <AccordionBody accordionId={4} className="tiered-body">
                         {tierData?.products?.map((list) => {
                           return (

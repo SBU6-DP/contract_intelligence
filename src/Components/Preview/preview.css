@@ -29,8 +29,8 @@
     top: 140px;
     right: 0;
     z-index: 1;
-    height: 92vh;
-    width: 480px;
+    height: 85vh;
+    width: 600px;
 }
 
 .loading-info{
@@ -108,17 +108,23 @@
 
 .preview-acc .accordion-button.collapsed{
     background-color: #161B26!important;
-    padding: 11px 12px 11px 24px;
     font-size: 18px;
     font-weight: 600;
+    height: 60px;
+    padding: 11px 24px 11px 24px;
 }
 
 .preview-acc .accordion-button:not(.collapsed){
     background-color: #262A33!important;
     color: white!important;
-    padding: 11px 12px 11px 24px;
+    padding: 11px 24px 11px 24px;
+    height: 60px;
     font-size: 18px;
     font-weight: 600;
+}
+
+.preview-acc .accordion-button::after{
+    background-size: 17.5px;
 }
 
 .acc-list-data {
@@ -134,11 +140,19 @@
     margin: 0px;
 }
 
+.preview-acc .accordion-item{
+    margin: 0;
+}
+
 .preview-acc .accordion-body{
     background-color: #262A33;
     border-radius: 0px;
     height: max-content;
-    padding: 10px 0px;
+    padding: 0px 0px;
+}
+
+.preview-acc .accordion-header{
+    border-bottom: 1px solid #1F242F;
 }
 
 .preview-acc .tiered-body .accordion-body{
@@ -277,10 +291,48 @@
     justify-content: space-between;
     align-items: center;
     top: 80px;
-    padding: 0px 30px;
-    width: 94%;
+    left: 80px;
+    padding: 0px 32px;
+    width: 96%;
     height: 60px;
     background-color: #0C111D;
     border-bottom: 1px solid #1F242F;
+}
+
+.doc-nav .head-back{
+    color: #F5F5F6;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.doc-nav .head-back h5{
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.doc-nav .head-back img{
+    width: 20px;
+    height: 20px;
+    margin: 8px;
+}
+
+
+.doc-nav .next-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+}
+
+.doc-nav .next-page .count-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: #F5F5F6;
+    font-size: 16px;
+    font-weight: 600;
 }
 

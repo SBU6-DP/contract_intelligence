@@ -16,7 +16,7 @@ function ContractFile() {
     const navigate = useNavigate()
   return (
     <Layouts>
-        <div className='px-4 pt-3'>
+        {/* <div className='px-4 pt-3'>
             <div className="list-head">
                 <h5>Contract Documents</h5>
                 <div>
@@ -35,7 +35,7 @@ function ContractFile() {
             </div>
           </div>
         </div>
-        </div>
+        </div> */}
       <div className="list-container">
         <div className='list-card-contract'>
             <Row>
@@ -46,7 +46,7 @@ function ContractFile() {
                         </div>
                         <div className='count-result'>
                             <h5 className='head'>Total Contract</h5>
-                            <h3 className='result'>251</h3>
+                            <h3 className='result'>1</h3>
                         </div>
                     </div>
                 </Col>
@@ -56,8 +56,8 @@ function ContractFile() {
                             <img src={fileCheckImg}/>
                         </div>
                         <div className='count-result'>
-                            <h5 className='head'>Total Contract</h5>
-                            <h3 className='result'>251</h3>
+                            <h5 className='head'>Ready for Review</h5>
+                            <h3 className='result'>1</h3>
                         </div>
                     </div>
                 </Col>
@@ -67,8 +67,8 @@ function ContractFile() {
                             <img src={fileSearchImg}/>
                         </div>
                         <div className='count-result'>
-                            <h5 className='head'>Total Contract</h5>
-                            <h3 className='result'>251</h3>
+                            <h5 className='head'>Processing Contract</h5>
+                            <h3 className='result'>0</h3>
                         </div>
                     </div>
                 </Col>
@@ -108,15 +108,15 @@ function ContractFile() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr onClick={()=>navigate('/list/preview')} className='contract-result-list'>
                       <th scope="col">
                         <input type="checkbox" />
                       </th>
-                      <td className="doc-box">Gender</td>
-                      <td className="id-box">equals(=)</td>
-                      <td className="type-box">50</td>
-                      <td className="ver-box">50</td>
-                      <td className="status-box">50</td>
+                      <td className="doc-box">SRM Pharma Contract</td>
+                      <td className="id-box">IOP890</td>
+                      <td className="type-box">PDF</td>
+                      <td className="ver-box">1.0.0</td>
+                      <td className="status-box">Completed</td>
                       
                     </tr>
 
