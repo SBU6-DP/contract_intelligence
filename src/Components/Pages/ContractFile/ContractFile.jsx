@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layouts from '../Layouts/Layouts'
 import './contractfile.css'
 import { Col, Row } from 'reactstrap'
@@ -11,9 +11,62 @@ import fileImg from "../../../images/icons/file-06.svg";
 import fileCheckImg from "../../../images/icons/file-check.svg";
 import fileSearchImg from "../../../images/icons/file-search.svg";
 import { useNavigate } from 'react-router-dom'
+import request from '../../../api/api'
 
 function ContractFile() {
     const navigate = useNavigate()
+    const [isLoading,setIsLoading]= useState(true)
+    const [contractList,setContractList] = useState([])
+
+    const getContractList = ()=>{
+      setIsLoading(true)
+      request({
+        url:'/contract',
+        method:'GET'
+      }).then((res)=>{
+        setIsLoading(false)
+          setContractList(res)
+      }).catch((err)=>{
+        console.log(err)
+        setIsLoading(false)
+        // setContractList([
+        //     {
+        //       contract_number: "PPPH18SR01",
+        //       agreement_number: "NP-PHA-2025-C4761",
+        //       pharma_company: "SRM Pharmaceuticals, Inc.",
+        //       channel_partner_name: "Premier Health Alliance, LLC",
+        //       channel_partner_type: "GPO",
+        //       start_date: "2025-07-01",
+        //       end_date: "2025-10-31",
+        //       contract_status: "Active",
+        //       document_path: null,
+        //       author: "Administrator",
+        //       document_name:
+        //         "Premier Health Alliance Agreement with SRM Pharmaceuticals",
+        //       document_type: "GPO",
+        //       document_status: "Active",
+        //       document_version_number: "1",
+        //       document_version_creation_date: "2025-07-01",
+        //       contract_sub_type: "Contract",
+        //       owner: "Administrator",
+        //       program_only: 0,
+        //       source_type: "NEW",
+        //       adjust_by: "%",
+        //       category_pricing: "PRICE",
+        //       price_list_name: "WAC",
+        //       pricing_method: "Tier",
+        //       number_of_tiers: 3,
+        //       created_at: "2025-06-17T09:21:22",
+        //       updated_at: "2025-06-17T09:21:22",
+        //     },
+        //   ]);
+      })
+    }
+
+    useEffect(()=>{
+      getContractList()
+    },[])
+
   return (
     <Layouts>
         {/* <div className='px-4 pt-3'>
@@ -46,7 +99,7 @@ function ContractFile() {
                         </div>
                         <div className='count-result'>
                             <h5 className='head'>Total Contract</h5>
-                            <h3 className='result'>1</h3>
+                            <h3 className='result'>{contractList?.length}</h3>
                         </div>
                     </div>
                 </Col>
@@ -57,7 +110,7 @@ function ContractFile() {
                         </div>
                         <div className='count-result'>
                             <h5 className='head'>Ready for Review</h5>
-                            <h3 className='result'>1</h3>
+                            <h3 className='result'>{contractList?.length}</h3>
                         </div>
                     </div>
                 </Col>
@@ -102,23 +155,46 @@ function ContractFile() {
                       <th scope="col" className="ver-box">
                         Ver. Number
                       </th>
+                      <th scope="col" className="ver-box">
+                        Start Date
+                      </th>
+                       <th scope="col" className="ver-box">
+                        End Date
+                      </th>
+                       <th scope="col" className="ver-box">
+                        Customer
+                      </th>
+                      <th scope="col" className="ver-box">
+                        Author
+                      </th>
                       <th scope="col" className="status-box">
                        Status
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr onClick={()=>navigate('/list/preview')} className='contract-result-list'>
+                    {
+                      isLoading ? <div>Loading...</div> : (
+                        contractList.length>0 && contractList?.map((doc)=>{
+                            return <tr onClick={()=>navigate('/list/preview')} className='contract-result-list'>
                       <th scope="col">
                         <input type="checkbox" />
                       </th>
-                      <td className="doc-box">SRM Pharma Contract</td>
-                      <td className="id-box">IOP890</td>
-                      <td className="type-box">PDF</td>
-                      <td className="ver-box">1.0.0</td>
-                      <td className="status-box">Completed</td>
+                      <td className="doc-box">{doc?.document_name}</td>
+                      <td className="id-box">{doc?.contract_number}</td>
+                      <td className="type-box">{doc?.document_type}</td>
+                      <td className="ver-box">{doc?.document_version_number}</td>
+                      <td className="ver-box">{doc?.start_date}</td>
+                      <td className="ver-box">{doc?.end_date}</td>
+                      <td className="ver-box">{doc?.owner}</td>
+                      <td className="ver-box">{doc?.author}</td>
+                      <td className="status-box">{doc?.document_status}</td>
                       
                     </tr>
+                        })
+                      )
+                    }
+                    
 
                   </tbody>
                 </table>
