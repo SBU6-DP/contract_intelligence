@@ -15,6 +15,7 @@ import Upload from "./Components/Pages/Upload/Upload";
 import Preview from "./Components/Preview/Preview";
 import ContractFile from "./Components/Pages/ContractFile/ContractFile";
 import Chat from "./Components/Pages/Chat/Chat";
+import ContractList from "./Components/Pages/ContractList/ContractList";
 
 const dashboardRoutes = [
   {
@@ -125,7 +126,7 @@ const uploadRouters = [
     children: [
       {
         index: true,
-        element: <ContractFile />,
+        element: <ContractList />,
       },
       {
         path: "/list/upload",

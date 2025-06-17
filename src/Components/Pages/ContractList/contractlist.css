@@ -1,0 +1,60 @@
+
+.contract-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 10px;
+}
+    
+.contract-search-box {
+    grid-row: span 5 / span 5;
+    background-color: #0C111D;
+    border: 1px solid #1F242F;
+    height: 90vh;
+}
+
+.contract-details-box {
+    grid-column: span 2 / span 2;
+    grid-row: span 3 / span 3;
+     background-color: #0C111D;
+    border: 1px solid #1F242F;
+}
+
+.tier-details-box {
+    grid-column: span 2 / span 2;
+    grid-row: span 3 / span 3;
+    grid-column-start: 4;
+    background-color: #0C111D;
+    border: 1px solid #1F242F;
+}
+
+.pricing-table-box {
+    grid-column: span 4 / span 4;
+    grid-row: span 2 / span 2;
+    grid-column-start: 2;
+    grid-row-start: 4;
+    background-color: #0C111D;
+    border: 1px solid #1F242F;
+}
+        
+
+
+.contract-details-box .details-head{
+    height: 50px;
+    background-color: transparent;
+    border-bottom: 1px solid #1F242F;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding:12px;
+}
+
+.contract-details-box .details-head h3{
+    font-size: 16px;
+    color:#F5F5F6;
+}
+
+.contract-details-box .details-head img{
+    width: 24px;
+    height: 24px;
+}
