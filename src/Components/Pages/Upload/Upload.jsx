@@ -18,7 +18,6 @@ function Upload() {
     contract: 0,
   });
 
-  console.log(uploadProgress);
 
   const handleFileChange = (e, type) => {
     const selectedFiles = Array.from(e.target.files);
@@ -54,52 +53,28 @@ function Upload() {
       duration: Infinity,
     });
 
-    // if (!files.contract || !files.price) {
-    //   return alert("Please upload both files.");
-    // }
+    if (files.length<=0) {
+      return alert("Please upload file");
+    }
 
-    // const formData = new FormData();
-    // formData.append("contract_document", files.contract);
-    // formData.append("list_price_document", files.price);
+    const formData = new FormData();
+    formData.append("file", files[0]);
 
-    // let contractUrl = URL.createObjectURL(files.contract);
-    // let priceUrl = URL.createObjectURL(files.price);
 
-    // console.log(contractUrl, priceUrl);
-
-    // request({
-    //   url: "/contract2xml/contract/load-pdf",
-    //   method: "POST",
-    //   data: formData,
-    // })
-    //   .then((res) => {
-    //     toast.remove();
-    //     toast.success(res.message);
-    //     navigate("preview", {
-    //       state: {
-    //         files: {
-    //           contract: files.contract,
-    //           price: files.price,
-    //         },
-    //         pricing: res?.pricing,
-    //       },
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     toast.error("Network Error");
-    //     // toast.remove()
-    //     //  navigate("preview", {
-    //     //      state: {
-    //     //        files: {
-    //     //          contract: files.contract,
-    //     //          price: files.price,
-    //     //        },
-    //     //      },
-    //     //    });
-    //   });
+    request({
+      url: "/icontract/process_contract",
+      method: "POST",
+      data: formData,
+    })
+      .then((res) => {
+        toast.remove();
+        toast.success("Extraction completed");
+        navigate('/list')
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     toast.remove()
-    navigate('/list/preview')
   };
 
   return (

@@ -11,6 +11,7 @@
     background-color: #0C111D;
     border: 1px solid #1F242F;
     height: 90vh;
+    padding: 16px 12px;
 }
 
 .contract-details-box {
@@ -58,3 +59,171 @@
     width: 24px;
     height: 24px;
 }
+
+.contract-search-box .search-box-head {
+    margin-bottom: 20px;
+}
+
+.contract-search-box .search-box-head h3{
+    font-size: 16px;
+    font-weight: 600;
+    color: #F5F5F6;
+}
+
+.contract-search-box .contract-search-inp {
+  width: 100%;
+  color: #f5f5f6;
+  margin-right: 12px;
+  height: 36px !important;
+}
+
+
+
+.contract-search-box .search-box:hover {
+  outline: 1px solid #9254de;
+  border: none;
+}
+
+.contract-search-box .search-box:focus-visible {
+  outline: 1px solid #9254de;
+  border: none;
+}
+
+.search-box {
+      display: flex;
+      align-items: center;
+      border: 1px solid #3a3d44;
+      border-radius: 4px;
+      padding: 10px 12px;
+      width: 100%;
+      height: 36px;
+      background-color: transparent;
+    }
+
+    .search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+      color: #b0b0b0;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    .search-box img {
+      margin-right: 8px;
+      width: 20px;
+      height: 20px;
+    }
+
+.contract-doc-list{
+    display: flex;
+    gap: 12px;
+    padding: 10px 6px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.contract-doc-list .doc-name-id .name {
+    font-size: 14px;
+    font-weight:400 ;
+    color: #F5F5F6;
+}
+
+.contract-doc-list .doc-name-id .id{
+font-size: 14px;
+    font-weight:400 ;
+    color: #94969C;
+}
+
+
+.contract-doc-list .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d1d1d1;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .contract-doc-list .checkbox-container input[type="checkbox"] {
+      display: none;
+    }
+
+    .contract-doc-list .custom-checkbox {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      background-color: #2c2c2e;
+      position: relative;
+      transition: background-color 0.2s ease;
+    }
+
+    .contract-doc-list .checkbox-container input[type="checkbox"]:checked + .custom-checkbox {
+      background-color: #722ED1;
+    }
+
+    .contract-doc-list .checkbox-container input[type="checkbox"]:checked + .custom-checkbox::after {
+      content: url('../../../images/icons/check.svg');
+      color: white;
+      font-size: 1px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+
+      transform: translate(-50%, -50%);
+    }
+/* Navbar */
+
+.contract-profile-tabs{
+    
+}
+
+.nav-tabs{
+    --bs-nav-tabs-link-hover-border-color:none;
+    border-bottom: none;
+}
+
+.contract-tabs-container {
+    padding: 4px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.contract-profile-tabs .nav-link {
+  color: #4b4b4b;
+  border: none;
+  background: transparent;
+  margin-right: 15px;
+  font-weight: 500;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.contract-profile-tabs .nav-link.active {
+  background: var(--nav-tab-active);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text);
+  border: none;
+}
+
+.ai-badge {
+  background-color: var(--badge-bg)!important;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 8px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.nav-link.active .ai-badge{
+    background-color: var(--badge-bg-active)!important;
+    border: 1px solid var(--badge-active-border)!important;
+    color: var(--badge-color-active);
+}
+
+
+
+

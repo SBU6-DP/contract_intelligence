@@ -204,3 +204,36 @@
     background-color: #f2f2f2f2;
   }
   
+
+  :root{
+    --white-bg:#0C111D;
+  --bg: #0C111D;
+  --text: #F5F5F6;
+  --sidebar:#0C111D;
+  --sidebar-top:#0C111D;
+  --sidebar-border:#1F242F;
+  --menu-bg:#1F242F;
+   --border:#1F242F;
+  --topbar-border:#1F242F;
+  --text-primary:#F5F5F6;
+  --text-teritary:#94969C;
+   --text-secondary:#CECFD2;
+  --text-brand-secondary:#531DAB;
+  --list-bg:#1F242F;
+  --input-border:#1F242F;
+   --placeholder-text:#85888E;
+   --dropdown-arrow:#85888E;
+   --filter-btn-hover:#1F242F;
+   --link-color:#CECFD2;
+   --clear-btn:#CECFD2;
+   --nav-tab-active:#161B26;
+   --badge-bg:#161B26;
+   --badge-bg-active:#102A56;
+   --badge-color-active:#84CAFF;
+   --badge-active-border:#1849A9;
+   --utility-blue:#102A56;
+   --utility-pink:#4E0D30;
+   --utility-pink-border:#9E165F;
+   --utility-success:#053321;
+   --utility-success-border:#085D3A;
+  }

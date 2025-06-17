@@ -4,6 +4,7 @@ import filterIcon from '../../../images/icons/filters.png'
 import search from '../../../images/icons/search.png'
 import home from '../../../images/sidebar_icons/home-line.svg'
 import fileCheck from '../../../images/sidebar_icons/file-check-02.svg'
+import searchFile from '../../../images/sidebar_icons/searchFile.svg'
 import aiChat from '../../../images/sidebar_icons/ai-chat.svg'
 
 export const SidebarData =[
@@ -25,6 +26,15 @@ export const SidebarData =[
       //   link: '/hcp',
       //   bgShade: 'linear-gradient(to right,rgb(0, 137, 249),rgb(0, 55, 255))',
       // },
+      {
+        navItem: '',
+        id: 'contract',
+        // show: false,
+        img: searchFile,
+        // imgSelected: learningSupportSelected,
+        link: '/contract',
+        bgShade: 'linear-gradient(to right,rgb(0, 137, 249),rgb(0, 55, 255))',
+      },
       {
         navItem: '',
         id: 'list',

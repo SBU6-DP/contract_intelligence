@@ -112,6 +112,26 @@ const hcpRouters = [
   },
 ];
 
+const contractRouters =[
+  {
+    path:'/contract',
+     handle: {
+      crumb: () => (
+        <NavLink to="/contract" className="breadcrumb-link">
+          Contract
+        </NavLink>
+      ),
+      activeMenuId: "contract",
+    },
+    children:[
+      {
+        index: true,
+        element: <ContractList />,
+      },
+    ]
+  }
+]
+
 const uploadRouters = [
   {
     path: "/list",
@@ -126,7 +146,7 @@ const uploadRouters = [
     children: [
       {
         index: true,
-        element: <ContractList />,
+        element: <ContractFile />,
       },
       {
         path: "/list/upload",
@@ -187,6 +207,7 @@ export const router = createBrowserRouter(
           element: "",
           children: concat(
             uploadRouters,
+            contractRouters,
             chatRouters
           ),
           errorElement: <ErrorBoundary />,
