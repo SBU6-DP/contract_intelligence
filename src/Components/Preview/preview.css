@@ -29,8 +29,9 @@
     top: 140px;
     right: 0;
     z-index: 1;
-    height: 85vh;
-    width: 600px;
+    min-height: 70vh;
+    max-height: 87vh;
+    width: 540px;
 }
 
 .loading-info{

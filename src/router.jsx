@@ -14,6 +14,7 @@ import NewHcp from "./Components/Pages/HCP/NewHcp";
 import Upload from "./Components/Pages/Upload/Upload";
 import Preview from "./Components/Preview/Preview";
 import ContractFile from "./Components/Pages/ContractFile/ContractFile";
+import Chat from "./Components/Pages/Chat/Chat";
 
 const dashboardRoutes = [
   {
@@ -138,6 +139,27 @@ const uploadRouters = [
   },
 ];
 
+const chatRouters = [
+ { 
+  path: "/chat",
+  handle: {
+      crumb: () => (
+        <NavLink to="/chat" className="breadcrumb-link">
+          Chat
+        </NavLink>
+      ),
+      activeMenuId: "chat",
+    },
+  children: [
+      {
+        index: true,
+        element: <Chat />,
+      },
+    ],
+  },
+  
+]
+
 export const router = createBrowserRouter(
   [
     // Public Routes
@@ -162,7 +184,10 @@ export const router = createBrowserRouter(
       children: [
         {
           element: "",
-          children: concat(uploadRouters),
+          children: concat(
+            uploadRouters,
+            chatRouters
+          ),
           errorElement: <ErrorBoundary />,
         },
       ],

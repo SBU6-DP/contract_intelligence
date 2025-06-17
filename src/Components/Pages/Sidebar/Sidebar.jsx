@@ -49,7 +49,7 @@ function Sidebar() {
                   title={list?.navItem}
                   onClick={() => setActiveMenu(list.id)}
                 >
-                  <div className="side-menu-box">
+                  <div className={ `side-menu-box ${list.id === activeMenu ?"active" :''}`}>
                   <img src={list.img} className="sidebar-icon-img" />
                   </div>
                  {/* <span> {list?.navItem}</span> */}
