@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from "react";
 import Layouts from "../Layouts/Layouts";
-import './contractlist.css'
+import "./contractlist.css";
 
 import maximize from "../../../images/icons/maximize.svg";
 import request from "../../../api/api";
-import serachImg from '../../../images/icons/search-sm.svg'
+import serachImg from "../../../images/icons/search-sm.svg";
+import fileImg from "../../../images/icons/file-06.svg";
+import alertImg from "../../../images/icons/alert-triangle.svg";
 import { Badge, Nav, NavItem, NavLink } from "reactstrap";
 
 function ContractList() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [contractList, setContractList] = useState([]);
+  const [activeTab, setActiveTab] = useState(1);
 
-  const [isLoading,setIsLoading]= useState(true)
-    const [contractList,setContractList] = useState([])
-    const [activeTab,setActiveTab] = useState(1)
-
-    const getContractList = ()=>{
-      setIsLoading(true)
-      request({
-        url:'/contract',
-        method:'GET'
-      }).then((res)=>{
-        setIsLoading(false)
-          setContractList(res)
-      }).catch((err)=>{
-        console.log(err)
-        setIsLoading(false)
+  const getContractList = () => {
+    setIsLoading(true);
+    request({
+      url: "/contract",
+      method: "GET",
+    })
+      .then((res) => {
+        setIsLoading(false);
+        setContractList(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
         // setContractList([
         //     {
         //       contract_number: "PPPH18SR01",
@@ -55,118 +58,98 @@ function ContractList() {
         //       updated_at: "2025-06-17T09:21:22",
         //     },
         //   ]);
-      })
-    }
+      });
+  };
 
-    useEffect(()=>{
-      getContractList()
-    },[])
+  useEffect(() => {
+    getContractList();
+  }, []);
   return (
     <Layouts>
-        <div class="container-fluid contract-list">
-      <div class="contract-search-box">
+      <div class="contract-list p-0">
+        <div class="contract-search-box">
           <div className="search-box-head">
             <h3>Contract Documents</h3>
           </div>
           <div className="search-box">
-            <img src={serachImg}/>
-            <input className="contract-search-inp" placeholder="Search"/>
+            <img src={serachImg} />
+            <input className="contract-search-inp" placeholder="Search" />
           </div>
           <div>
-            
             <div className="contract-doc-list">
               <label class="checkbox-container">
-                      <input type="checkbox" />
-                      <span class="custom-checkbox"></span>
-                    </label>
+                <input type="checkbox" />
+                <span class="custom-checkbox"></span>
+              </label>
               <div className="doc-name-id">
-                <h5 className="name">
-                  PBM_Contract_Amgen_2025_Q1_v1.0.pdf
-                </h5>
-                <h5 className="id">
-                  SM125678
-                </h5>
+                <h5 className="name">PBM_Contract_Amgen_2025_Q1_v1.0.pdf</h5>
+                <h5 className="id">SM125678</h5>
               </div>
             </div>
             <div className="contract-doc-list">
               <label class="checkbox-container">
-                      <input type="checkbox" />
-                      <span class="custom-checkbox"></span>
-                    </label>
+                <input type="checkbox" />
+                <span class="custom-checkbox"></span>
+              </label>
               <div className="doc-name-id">
-                <h5 className="name">
-                  PBM_Contract_Amgen_2025_Q1_v1.0.pdf
-                </h5>
-                <h5 className="id">
-                  SM125678
-                </h5>
+                <h5 className="name">PBM_Contract_Amgen_2025_Q1_v1.0.pdf</h5>
+                <h5 className="id">SM125678</h5>
               </div>
             </div>
             <div className="contract-doc-list">
               <label class="checkbox-container">
-                      <input type="checkbox" />
-                      <span class="custom-checkbox"></span>
-                    </label>
+                <input type="checkbox" />
+                <span class="custom-checkbox"></span>
+              </label>
               <div className="doc-name-id">
-                <h5 className="name">
-                  PBM_Contract_Amgen_2025_Q1_v1.0.pdf
-                </h5>
-                <h5 className="id">
-                  SM125678
-                </h5>
+                <h5 className="name">PBM_Contract_Amgen_2025_Q1_v1.0.pdf</h5>
+                <h5 className="id">SM125678</h5>
               </div>
             </div>
           </div>
-      </div>
-      <div class="contract-details-box">
-        <div className="details-head">
+        </div>
+        <div class="contract-head-menu">
+          <div className="menu-head-1">
+            <h3>4 Contract Documents Selected</h3>
+            <div className="menu-head-count">
+              <div className="total">
+                <div className="ico">
+                  <img src={fileImg} />
+                </div>
+                <div className="d-flex align-items-center">
+                  Total Contracts<span className="count">252</span>
+                </div>
+              </div>
+              <div className="expire">
+                <div className="ico orange">
+                  <img src={alertImg} />
+                </div>
+                <div className="d-flex align-items-center">
+                  Expiring in next 30 days<span className="count">252</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="menu-head-2">
+            <div className="menu-nav-list">
+              <div className="active">Premier Health Alliance Agreement</div>
+              <div >Premier Health Alliance Agreement</div>
+              <div>Premier Health Alliance Agreement</div>
+              <div className="last">Premier Health Alliance Agreement</div>
+            </div>
+          </div>
+        </div>
+        <div class="contract-details-box">
+          <div className="details-head">
             <h3>Contract Details</h3>
             <div>
-                <img src={maximize}/>
+              <img src={maximize} />
             </div>
+          </div>
         </div>
-        <div className="contract-tabs-container">
-                <Nav tabs className="contract-profile-tabs">
-                  <NavItem>
-                    <NavLink
-                      NavLink
-                      onClick={() => setActiveTab(1)}
-                      className={`nav-link ${
-                        activeTab === 1 ? "active" : ""
-                      }`}
-                    >
-                      Profile Overview
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      onClick={() => setActiveTab(2)}
-                      className={`nav-link ${
-                        activeTab === 2 ? "active" : ""
-                      }`}
-                    >
-                      Publication & Insights
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      onClick={() => setActiveTab(3)}
-                      className={`nav-link ${
-                        activeTab === 3 ? "active" : ""
-                      }`}
-                    >
-                      Engagement Triggerers{" "}
-                      <Badge color="light" className="ai-badge">
-                        ⚡ AI Generated
-                      </Badge>
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-              </div>
+        <div class="tier-details-box">3</div>
+        <div class="pricing-table-box">4</div>
       </div>
-      <div class="tier-details-box">3</div>
-      <div class="pricing-table-box">4</div>
-    </div>
     </Layouts>
   );
 }

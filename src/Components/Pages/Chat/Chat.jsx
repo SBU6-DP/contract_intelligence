@@ -9,6 +9,14 @@ import close from "../../../images/icons/x-close.svg";
 import maximize from "../../../images/icons/maximize.svg";
 import pricingPdf from "./Product_Pricing_Table.pdf";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import request from "../../../api/api";
+import { useDispatch, useSelector } from "react-redux";
+import ReactMarkdown from 'react-markdown';
+import {
+  addMessageByBot,
+  addMessageByUser,
+} from "../../redux/features/chat.bot";
+import axios from "axios";
 
 const messages = [
   {
@@ -23,111 +31,200 @@ const messages = [
 ];
 
 function Chat() {
+  const { chatMessages } = useSelector((state) => state.chat);
+  const dispatch = useDispatch();
   const { instance, accounts } = useMsal();
   const [isMaxi, setIsMaxi] = useState(false);
   const [isPdfPreview, setIsPdfPreview] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [sendMessage, setSendMessage] = useState("");
+  const[pdfUrl,setPdfUrl]= useState('')
+
+  const chatMessage = () => {
+    setIsLoading(true);
+    dispatch(addMessageByUser(sendMessage));
+    axios.post('https://intell-chatbot.srm-tech.com/icontract/chatbot/ask',{question:sendMessage}).then((res) => {
+        setIsLoading(false);
+        setSendMessage("");
+        // setMessages(res?.data?.);
+        dispatch(addMessageByBot(res?.data))
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const loadPdf =(filename)=>{
+   axios.post(`https://icontract.srm-tech.com/icontract/backend/download/${filename}`).then((res)=>{
+        setIsPdfPreview(!isPdfPreview)
+        setPdfUrl(res)
+    }).catch((err)=>{
+        console.log(err)
+    })
+  }
+
+  const renderBulletPoints = (text) => {
+  const lines = text.split("\n").filter(line => line.trim() !== "");
+  const bullets = lines.filter(line => line.trim().startsWith("-"));
+  const otherText = lines.filter(line => !line.trim().startsWith("-"));
+
+  return (
+    <>
+      {otherText.length > 0 && <p>{otherText[0]}</p>}
+      <ul>
+        {bullets.map((line, idx) => (
+          <li key={idx} dangerouslySetInnerHTML={{ __html: line.replace(/^- /, "") }} />
+        ))}
+      </ul>
+      {otherText.length > 1 && <p>{otherText.slice(1).join(" ")}</p>}
+    </>
+  );
+};
+
+
   return (
     <Layouts>
       <div className="main-chat-box">
         <div className={`container chat ${isPdfPreview ? "preview" : ""}`}>
           <div className="chat-box">
-            {/* <div className="initial-chat">
-            <h1 className="chat-user">Hi, {accounts[0]?.name ?? "User"}!</h1>
-            <h1 className="chat-help">How can I help you?</h1>
-            <div className="initial-question">
-              <div className="row">
-                <div className="col-4">
-                  <div className="q-box">
-                    <h6>Explain how rebate tiers are calculated?</h6>
-                    <div className="text-end ex-link">
-                      <img src={externalLink} />
+            {chatMessages.length <= 0 ? (
+              <div className="initial-chat">
+                <h1 className="chat-user">
+                  Hi, {accounts[0]?.name ?? "User"}!
+                </h1>
+                <h1 className="chat-help">How can I help you?</h1>
+                <div className="initial-question">
+                  <div className="row">
+                    <div className="col-4">
+                      <div className="q-box">
+                        <h6>Explain how rebate tiers are calculated?</h6>
+                        <div className="text-end ex-link">
+                          <img src={externalLink} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-4">
+                      <div className="q-box">
+                        <h6>Explain how rebate tiers are calculated?</h6>
+                        <div className="text-end ex-link">
+                          <img src={externalLink} />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-4">
+                      <div className="q-box">
+                        <h6>Explain how rebate tiers are calculated?</h6>
+                        <div className="text-end ex-link">
+                          <img src={externalLink} />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="col-4">
-                  <div className="q-box">
-                    <h6>Explain how rebate tiers are calculated?</h6>
-                    <div className="text-end ex-link">
-                      <img src={externalLink} />
-                    </div>
-                  </div>
-                </div>
-                <div className="col-4">
-                  <div className="q-box">
-                    <h6>Explain how rebate tiers are calculated?</h6>
-                    <div className="text-end ex-link">
-                      <img src={externalLink} />
-                    </div>
-                  </div>
-                </div>
               </div>
-            </div>
-          </div> */}
-            <div className="chat-right">
-              <div className="chat-msg right">
-                <div className="by">You</div>
-                <div className="msg right">
-                  Hi, give me the contract offer summary.
-                </div>
-              </div>
-            </div>
-            <div className="chat-left">
-              <div className="logo-round">
-                <img src={logo} className="srm-bot" />
-              </div>
-              <div className="chat-msg ">
-                <div className="by">SRM Bot</div>
-                <div className="msg">
-                  Here's what I found in the document: Contract Summary:
-                  Contract Offer: Tiered rebate structure based on quarterly
-                  volume Business Group: Pfizer Specialty Care Product Group:
-                  Oncology - Biosimilars Tiered LI Summary: Tier 1: 0–500 units
-                  → 3% rebate Tier 2: 501–1000 units → 5% rebate Tier 3: 1001+
-                  units → 8% rebate
-                </div>
-                <div className="mb-5">
-                  <div>
-                    Source{" "}
-                    <img
-                      src={pdfRedIcon}
-                      className="pdf-icons"
-                      onClick={() => setIsPdfPreview(!isPdfPreview)}
-                    />
-                    <img
-                      src={pdfRedIcon}
-                      className="pdf-icons"
-                      onClick={() => setIsPdfPreview(!isPdfPreview)}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="chat-right">
-              <div className="chat-msg right">
-                <div className="by">You</div>
-                <div className="msg right">Hi,</div>
-              </div>
-            </div>
-            <div className="chat-left">
-              <div className="logo-round">
-                <img src={logo} className="srm-bot" />
-              </div>
-              <div className="chat-msg ">
-                <div className="by">SRM Bot</div>
-                <div>
-                  <div class="loader">
-                    <li class="ball"></li>
-                    <li class="ball"></li>
-                    <li class="ball"></li>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ) : (
+              <>
+                {chatMessages.map((msg) => {
+                  return (
+                    <>
+                      {msg.role === "user" ? (
+                        <div className="chat-right">
+                          <div className="chat-msg right">
+                            <div className="by">You</div>
+                            <div className="msg right">{msg.message}</div>
+                          </div>
+                        </div>
+                      ) : msg.role === "bot" ? (
+                        <div className="chat-left">
+                          <div className="logo-round">
+                            <img src={logo} className="srm-bot" />
+                          </div>
+                          <div className="chat-msg ">
+                            <div className="by">SRM Bot</div>
+                            <div className="msg">
+                              <ReactMarkdown>
+                                {msg?.message?.answer}
+                              </ReactMarkdown>
+                              {/* {renderBulletPoints()} */}
+                            </div>
+                            {msg?.contract_filenames ?? (
+                              <div className="mb-5">
+                                <div>
+                                  {msg?.message?.contract_filenames.length >
+                                    0 && (
+                                    <>
+                                      Source{" "}
+                                      {msg?.message?.contract_filenames?.map(
+                                        (pdf) => {
+                                          return (
+                                            <>
+                                              <img
+                                                src={pdfRedIcon}
+                                                className="pdf-icons"
+                                                onClick={() => loadPdf(pdf)}
+                                              />
+                                            </>
+                                          );
+                                        }
+                                      )}
+                                    </>
+                                  )}
+
+                                  {/*                                   
+                                  <img
+                                    src={pdfRedIcon}
+                                    className="pdf-icons"
+                                    onClick={() =>
+                                      setIsPdfPreview(!isPdfPreview)
+                                    }
+                                  /> */}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </>
+                  );
+                })}
+                <>
+                {
+                    isLoading? <>
+                            <div className="chat-left">
+                              <div className="logo-round">
+                                <img src={logo} className="srm-bot" />
+                              </div>
+                              <div className="chat-msg ">
+                                <div className="by">SRM Bot</div>
+                                <div>
+                                  <div class="loader">
+                                    <li class="ball"></li>
+                                    <li class="ball"></li>
+                                    <li class="ball"></li>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </>:''
+                }
+                </>
+              </>
+            )}
           </div>
           <div className="chat-search">
-            <input className="chat-search-input" />
+            <input
+              className="chat-search-input"
+              value={sendMessage}
+              onChange={(e) => setSendMessage(e.target.value)}
+            />
             <div>
-              <button className="chat-send-btn"></button>
+              <button
+                className="chat-send-btn"
+                onClick={() => chatMessage()}
+              ></button>
             </div>
           </div>
         </div>

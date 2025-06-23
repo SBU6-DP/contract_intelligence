@@ -2,42 +2,185 @@
 .contract-list {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(8, 1fr);
     gap: 10px;
+    background-color: #262A33;
+    position: fixed;
+    left: 80px;
+    top: 80px;
+    right: 0;
+    bottom: 0;
+    margin: 0;
 }
     
 .contract-search-box {
-    grid-row: span 5 / span 5;
+    grid-row: span 8 / span 8;
     background-color: #0C111D;
-    border: 1px solid #1F242F;
-    height: 90vh;
     padding: 16px 12px;
+}
+
+.contract-head-menu {
+    grid-column: span 4 / span 4;
+    background-color: transparent;
+    margin-top: 10px;
+    margin-right: 10px;
+    /* border: 1px solid #1F242F; */
 }
 
 .contract-details-box {
     grid-column: span 2 / span 2;
-    grid-row: span 3 / span 3;
-     background-color: #0C111D;
-    border: 1px solid #1F242F;
+    grid-row: span 4 / span 4;
+    grid-column-start: 2;
+    grid-row-start: 2;
+    background-color: #0C111D;
+    /* border: 1px solid #1F242F; */
 }
 
 .tier-details-box {
     grid-column: span 2 / span 2;
-    grid-row: span 3 / span 3;
+    grid-row: span 4 / span 4;
     grid-column-start: 4;
-    background-color: #0C111D;
-    border: 1px solid #1F242F;
+    grid-row-start: 2;
+   background-color: #0C111D;
+   margin-right: 10px;
+    /* border: 1px solid #1F242F; */
 }
 
 .pricing-table-box {
     grid-column: span 4 / span 4;
-    grid-row: span 2 / span 2;
+    grid-row: span 3 / span 3;
     grid-column-start: 2;
-    grid-row-start: 4;
+    grid-row-start: 6;
     background-color: #0C111D;
-    border: 1px solid #1F242F;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    /* border: 1px solid #1F242F; */
 }
-        
+
+.contract-head-menu .menu-head-1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: transparent;
+}
+
+.contract-head-menu .menu-head-1 h3{
+    color: #F5F5F6;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.contract-head-menu .menu-head-1 .menu-head-count{
+    display: flex;
+}
+
+.contract-head-menu .menu-head-1 .menu-head-count .total,.expire{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 44px;
+    background-color: #161B26;
+    padding: 4px 12px;
+    border-radius: 6px;
+    color: #94969C;
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.contract-head-menu .menu-head-1 .menu-head-count .total .count,.expire .count{
+    font-size: 18px;
+    color: #F5F5F6;
+    margin-left: 6px;
+}
+.contract-head-menu .menu-head-1 .menu-head-count .total .ico img , .expire .ico img{
+    width: 14px;
+    height: 14px;
+}
+
+.contract-head-menu .menu-head-1 .menu-head-count .total .ico{
+    background-color: #722ED1;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.contract-head-menu .menu-head-1 .menu-head-count .expire .ico.orange{
+    background-color: #D92D20;
+     width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.contract-head-menu .menu-head-2{
+    overflow-x: hidden;
+  white-space: nowrap;
+  width: 100%;
+  background-color: #161B26;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.contract-head-menu .menu-head-2:hover{
+    overflow-x: auto;
+}
+
+.contract-head-menu .menu-head-2 .menu-nav-list{
+    
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+
+}
+
+.contract-head-menu .menu-head-2 .menu-nav-list .active{
+    background-color: #0C111D;
+    border-radius: 8px;
+     color: #F5F5F6;
+}
+
+.contract-head-menu .menu-head-2 .menu-nav-list div{
+    padding: 8px 12px;
+    color: #94969C;
+    cursor: pointer;
+    position: relative;
+    margin-right:8px ;
+    margin-left:8px ;
+}
+
+.contract-head-menu .menu-head-2 .menu-nav-list div::after{
+        content: "";
+      position: absolute;
+      top: 10px;         /* custom start */
+      bottom: 8px;      /* custom end */
+      right: -8px;
+      width: 2px;
+      padding: 8px 0px;
+      background-color: rgb(148, 150, 156,0.2);
+}
+
+.contract-head-menu .menu-head-2 .menu-nav-list div.last::after{
+        content: "";
+      position: absolute;
+      top: 10px;         /* custom start */
+      bottom: 8px;      /* custom end */
+      right: 0;
+      width: 2px;
+      padding: 8px 0px;
+      background-color: rgb(148, 150, 156,0.2);
+      display: none;
+}
+
+  
 
 
 .contract-details-box .details-head{

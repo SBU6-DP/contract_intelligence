@@ -12,20 +12,20 @@ import fileCheckImg from "../../../images/icons/file-check.svg";
 import fileSearchImg from "../../../images/icons/file-search.svg";
 import { useNavigate } from 'react-router-dom'
 import request from '../../../api/api'
+import axios from 'axios'
 
 function ContractFile() {
     const navigate = useNavigate()
     const [isLoading,setIsLoading]= useState(true)
     const [contractList,setContractList] = useState([])
 
-    const getContractList = ()=>{
+    const getContractList = async()=>{
       setIsLoading(true)
       request({
-        url:'/contract',
-        method:'GET'
+        url:'/icontract/backend/columns/names'
       }).then((res)=>{
         setIsLoading(false)
-          setContractList(res)
+        setContractList(res.data)
       }).catch((err)=>{
         console.log(err)
         setIsLoading(false)
@@ -66,6 +66,11 @@ function ContractFile() {
     useEffect(()=>{
       getContractList()
     },[])
+
+
+    const sendtoPreview =(contract)=>{
+      navigate('/list/preview',{state:{contractNum:contract}})
+    }
 
   return (
     <Layouts>
@@ -176,7 +181,7 @@ function ContractFile() {
                     {
                       isLoading ? <div>Loading...</div> : (
                         contractList.length>0 && contractList?.map((doc)=>{
-                            return <tr onClick={()=>navigate('/list/preview')} className='contract-result-list'>
+                            return <tr onClick={()=>sendtoPreview(doc?.contract_number)} className='contract-result-list'>
                       <th scope="col">
                         <input type="checkbox" />
                       </th>

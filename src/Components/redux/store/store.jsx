@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import filterReducer from '../features/criteriaSlice'
+import chatSlice from '../features/chat.bot'
 
 const loadFromLocalStorage = () => {
     try {
@@ -31,6 +32,7 @@ const loadFromLocalStorage = () => {
 const store = configureStore({
     reducer: {
         criteria:filterReducer,
+        chat:chatSlice
     },
     preloadedState,
   })

@@ -32,6 +32,7 @@ import request from "../../api/api";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import axios from "axios";
 
 const tier = {
   tier_summary: [
@@ -461,25 +462,26 @@ const accordionData = [
   },
 ];
 
-const loadingStatus =[
+const loadingStatus = [
   "Analyzing your PDF...",
   "Looking for key data points and patterns…",
   "Extracting contract offer, business segment, product group, Tired LI summary...",
   "Smart AI is reading between the lines…",
   "Ensuring accuracy before showing results…",
   "Ready! Loading your insights…",
-]
+];
 
 function Preview() {
   const location = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("1");
   const [accordionOpen, setAccordionOpen] = useState("");
   const [responseData, setResponseData] = useState({});
   const [contractOffer, setContractOffer] = useState([]);
   const [productGroup, setProductGroup] = useState([]);
-  const [tierData, setTierData] = useState({});
+  const [tierDataProduct, setTierDataProduct] = useState([]);
+  const [tierSummary,setTierSummary] = useState()
   const { files } = location.state || {};
 
   const [contractUrl, setContractUrl] = useState("");
@@ -495,7 +497,6 @@ function Preview() {
 
     return () => clearInterval(interval); // cleanup
   }, [isLoading]);
-
 
   const toggleTab = (tab) => {
     if (activeTab !== tab) {
@@ -521,34 +522,59 @@ function Preview() {
   useEffect(() => {
     if (location?.state?.pricing) {
       setTierData(location?.state?.pricing);
-    } 
+    }
   }, [location]);
 
-  const fetchPreviewData = () => {
+  const fetchPreviewData = async () => {
     setIsLoading(true);
     request({
-      url: "/contract2xml/contract/extract-fields",
-      method: "POST",
+      url: `/icontract/backend/pricing/${location?.state?.contractNum}`,
+      method: "",
     })
       .then((res) => {
         setIsLoading(false);
-        setResponseData(res.contract);
-        setContractOffer(res?.contract["Contract Offer"]);
-        setProductGroup(res?.contract["Product Group"]);
+        setTierDataProduct(res?.products);
       })
       .catch((err) => {
-        setIsLoading(false);
-        setContractOffer(result.result['Contract Offer'])
-        setProductGroup(result.result['Product Group'])
-        setTierData(tier)
-        toast.success("Success")
+        toast.success("Success");
         console.log(err);
       });
   };
 
+  const fetchContract = async () => {
+    axios
+      .get("https://icontract.srm-tech.com/icontract/backend/columns/names")
+      .then((res) => {
+        console.log(res);
+        let contract = res.data.data.find(
+          (list) => list.contract_number === location?.state?.contractNum
+        );
+        console.log(contract);
+        setContractOffer(contract);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const fetchTierStucture =()=>{
+    request({
+      url:'/icontract/backend/tier_structure_columns/names',
+      method:'GET'
+    }).then((res)=>{
+      setTierSummary(res.data)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
+
   useEffect(() => {
-    fetchPreviewData();
-  }, []);
+    if (location?.state?.contractNum) {
+      fetchPreviewData();
+      fetchContract();
+    }
+    fetchTierStucture()
+  }, [location]);
 
   useEffect(() => {
     if (files?.contract) {
@@ -617,23 +643,32 @@ function Preview() {
     <Layouts>
       <div className="container-fluid position-relative">
         <div className="doc-nav">
-            <div className="head-back">
-              <h5 onClick={()=>navigate('/list')}><img src={arrow_narrow_left}/>Contract Document-SM125678.PDF</h5>
-            </div>
-            <div className="next-page">
-              <span><img src={left_arrow}/></span>
-              <span className="count-page"><span>01</span>/<span>12</span></span>
-              <span><img src={right_arrow}/></span>
-            </div>
+          <div className="head-back">
+            <h5 onClick={() => navigate("/list")}>
+              <img src={arrow_narrow_left} />
+              Contract Document-SM125678.PDF
+            </h5>
+          </div>
+          <div className="next-page">
+            <span>
+              <img src={left_arrow} />
+            </span>
+            <span className="count-page">
+              <span>01</span>/<span>12</span>
+            </span>
+            <span>
+              <img src={right_arrow} />
+            </span>
+          </div>
         </div>
         <Row>
           {/* Left Side: File Preview */}
           <Col lg="8" className="left-nav">
-           <iframe
-                  src={contractUrl ? `${contractUrl}` : contractPdf}
-                  width={"100%"}
-                  height={"900px"}
-                ></iframe>
+            <iframe
+              src={contractUrl ? `${contractUrl}` : contractPdf}
+              width={"100%"}
+              height={"900px"}
+            ></iframe>
             {/* <Nav tabs className="pt-2 preview-nav">
               <NavItem>
                 <NavLink
@@ -696,7 +731,6 @@ function Preview() {
                     <div className="w-50 m-auto text-center">
                       <img src={loadingImg} className="loadingimg" />
                       <h5 className="loading-info">
-                       
                         <i>{loadingStatus[statusIndex]}</i>
                       </h5>
                     </div>
@@ -716,14 +750,14 @@ function Preview() {
                       </AccordionHeader>
                       <AccordionBody accordionId={1}>
                         <ul className="acc-list-data">
-                          {contractOffer.map((data, index) => (
-                            <li key={index}>
-                              <span className="text-capitalize">
-                                {data.field}:
-                              </span>{" "}
-                              {String(data.answer)}
-                            </li>
-                          ))}
+                          {Object.entries(contractOffer).map(
+                            ([key, value], index) => (
+                              <li key={index}>
+                                <span className="text-capitalize">{key}:</span>
+                                {String(value)}
+                              </li>
+                            )
+                          )}
                         </ul>
                       </AccordionBody>
                     </AccordionItem>
@@ -733,14 +767,23 @@ function Preview() {
                       </AccordionHeader>
                       <AccordionBody accordionId={2}>
                         <ul className="acc-list-data">
-                          {productGroup.map((data, index) => (
-                            <li key={index}>
-                              <span className="text-capitalize">
-                                {data.field}:
-                              </span>{" "}
-                              {String(data.answer)}
-                            </li>
-                          ))}
+                          {Object.entries(contractOffer).map(
+                            ([key, value], index) =>
+                              key === "adjust_by" ||
+                              key === "category_pricing" ||
+                              key === "price_list_name" ||
+                              key === "pricing_method" ||
+                              key === "number_of_tiers" ? (
+                                <li key={index}>
+                                  <span className="text-capitalize">
+                                    {key}:
+                                  </span>{" "}
+                                  {String(value)}
+                                </li>
+                              ) : (
+                                ""
+                              )
+                          )}
                         </ul>
                       </AccordionBody>
                     </AccordionItem>
@@ -750,13 +793,13 @@ function Preview() {
                         Tiered Summary
                       </AccordionHeader>
                       <AccordionBody accordionId={3} className="tiered-body">
-                        {tierData?.tier_summary?.map((list, idx) => {
+                        {tierSummary?.map((list, idx) => {
                           return (
                             <ul className="acc-list-data tiered">
                               <li className="hdr">
                                 <h6>
-                                  Tier Level :{" "}
-                                  <span className="cnt">0{idx + 1}</span>{" "}
+                                  Tier Level :
+                                  <span className="cnt">0{list?.tier_level}</span>{" "}
                                 </h6>
                               </li>
                               <li className="hdr">
@@ -765,14 +808,14 @@ function Preview() {
                                     <span className="tier-span">
                                       Purchase Volume Min
                                     </span>
-                                    <h5>{list.purchase_volume_min ?? "-"}</h5>
+                                    <h5>{list.volume_min ?? "-"}</h5>
                                   </div>
                                   <div className="wac-price ndc-bg">
                                     <span className="tier-span">
                                       Purchase Volume Max
                                     </span>
                                     <h5 className="">
-                                      {list.purchase_volume_max ?? "-"}
+                                      {list.volume_max ?? "-"}
                                     </h5>
                                   </div>
                                 </div>
@@ -785,25 +828,23 @@ function Preview() {
                                         Price Discount (%)
                                       </span>{" "}
                                     </h5>
-                                    <h5>
-                                      {list.price_discount_percentage}%
-                                    </h5>
+                                    <h5>{list.discount_percentage}%</h5>
                                   </div>
                                   <div className="ndc-num">
                                     <h5>
                                       <span className="tier-span">
                                         Admin Fees(%)
                                       </span>{" "}
-                                      
                                     </h5>
-                                    <h5>{list.administrative_fee_percentage}%</h5>
+                                    <h5>
+                                      {list.admin_fee_percentage}%
+                                    </h5>
                                   </div>
                                   <div className="ndc-num">
                                     <h5>
                                       <span className="tier-span">
                                         Rebate(%)
                                       </span>{" "}
-                                      
                                     </h5>
                                     <h5>{list.rebate_percentage}%</h5>
                                   </div>
@@ -908,9 +949,11 @@ function Preview() {
                     </AccordionItem>
 
                     <AccordionItem>
-                      <AccordionHeader className="tiered-head" targetId={4}>Tiered LI</AccordionHeader>
+                      <AccordionHeader className="tiered-head" targetId={4}>
+                        Tiered LI
+                      </AccordionHeader>
                       <AccordionBody accordionId={4} className="tiered-body">
-                        {tierData?.products?.map((list) => {
+                        {tierDataProduct?.map((list) => {
                           return (
                             <ul className="acc-list-data tiered">
                               <li className="hdr">

@@ -8,10 +8,12 @@ import fileImg from "../../../images/icons/contract-file.svg";
 import { useNavigate } from "react-router-dom";
 import request from "../../../api/api";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 function Upload() {
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
+  console.log(files)
 
   const [uploadProgress, setUploadProgress] = useState({
     price: 0,
@@ -48,7 +50,7 @@ function Upload() {
   setFiles((prev) => prev.filter((f) => f.id !== id));
 };
 
-  const handleUpload = () => {
+  const handleUpload = async() => {
     toast.loading("Uploading...", {
       duration: Infinity,
     });
@@ -57,24 +59,29 @@ function Upload() {
       return alert("Please upload file");
     }
 
-    const formData = new FormData();
-    formData.append("file", files[0]);
+   
+
+    files.forEach(async (li) => {
+      const formData = new FormData();
+      formData.append("file", li.file);
+
+      await axios
+        .post(
+          "https://icontract.srm-tech.com/icontract/backend/uploadtos3",
+          formData
+        )
+        .then((res) => {
+          console.log(res);
+          toast.remove();
+          toast.success("Upload Completed");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
 
 
-    request({
-      url: "/icontract/process_contract",
-      method: "POST",
-      data: formData,
-    })
-      .then((res) => {
-        toast.remove();
-        toast.success("Extraction completed");
-        navigate('/list')
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    toast.remove()
+    
   };
 
   return (
