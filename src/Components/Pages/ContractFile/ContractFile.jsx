@@ -22,7 +22,7 @@ function ContractFile() {
     const getContractList = async()=>{
       setIsLoading(true)
       request({
-        url:'/icontract/backend/columns/names'
+        url:'/icontract/backend/list_contracts'
       }).then((res)=>{
         setIsLoading(false)
         setContractList(res.data)

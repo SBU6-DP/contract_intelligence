@@ -67,13 +67,14 @@ function Upload() {
 
       await axios
         .post(
-          "https://icontract.srm-tech.com/icontract/backend/uploadtos3",
+          "http://localhost:8006/icontract/backend/uploadtos3",
           formData
         )
         .then((res) => {
           console.log(res);
           toast.remove();
           toast.success("Upload Completed");
+          navigate('/list')
         })
         .catch((err) => {
           console.log(err);

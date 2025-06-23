@@ -485,7 +485,7 @@ function Preview() {
   const { files } = location.state || {};
 
   const [contractUrl, setContractUrl] = useState("");
-  const [priceUrl, setPriceUrl] = useState("");
+  const [url, setUrl] = useState("");
   const [statusIndex, setStatusIndex] = useState(0);
 
   useEffect(() => {
@@ -525,71 +525,28 @@ function Preview() {
     }
   }, [location]);
 
-  const fetchPreviewData = async () => {
-    setIsLoading(true);
-    request({
-      url: `/icontract/backend/pricing/${location?.state?.contractNum}`,
-      method: "",
-    })
-      .then((res) => {
-        setIsLoading(false);
-        setTierDataProduct(res?.products);
-      })
-      .catch((err) => {
-        toast.success("Success");
-        console.log(err);
-      });
-  };
-
+ 
   const fetchContract = async () => {
     axios
-      .get("https://icontract.srm-tech.com/icontract/backend/columns/names")
+      .get(`http://localhost:8006/icontract/backend/AllColumns/${location?.state?.contractNum}`)
       .then((res) => {
         console.log(res);
-        let contract = res.data.data.find(
-          (list) => list.contract_number === location?.state?.contractNum
-        );
-        console.log(contract);
-        setContractOffer(contract);
+        setContractOffer(res.contracts);
+        setTierSummary(res.tier_structures)
+        setTierDataProduct(res.products)
+        setUrl(res.file_info)
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const fetchTierStucture =()=>{
-    request({
-      url:'/icontract/backend/tier_structure_columns/names',
-      method:'GET'
-    }).then((res)=>{
-      setTierSummary(res.data)
-    }).catch((err)=>{
-      console.log(err)
-    })
-  }
-
+ 
   useEffect(() => {
     if (location?.state?.contractNum) {
-      fetchPreviewData();
       fetchContract();
     }
-    fetchTierStucture()
   }, [location]);
-
-  useEffect(() => {
-    if (files?.contract) {
-      setContractUrl(URL.createObjectURL(files.contract));
-    }
-    if (files?.price) {
-      setPriceUrl(URL.createObjectURL(files.price));
-    }
-
-    return () => {
-      // Revoke URLs on cleanup
-      if (contractUrl) URL.revokeObjectURL(contractUrl);
-      if (priceUrl) URL.revokeObjectURL(priceUrl);
-    };
-  }, [files]);
 
   const exportResultToExcel = () => {
     toast.loading("Downloading....", { duration: Infinity });
@@ -646,7 +603,7 @@ function Preview() {
           <div className="head-back">
             <h5 onClick={() => navigate("/list")}>
               <img src={arrow_narrow_left} />
-              Contract Document-SM125678.PDF
+              {url?.file_name}
             </h5>
           </div>
           <div className="next-page">
@@ -665,7 +622,7 @@ function Preview() {
           {/* Left Side: File Preview */}
           <Col lg="8" className="left-nav">
             <iframe
-              src={contractUrl ? `${contractUrl}` : contractPdf}
+              src={url ? `${url?.file_url}` : contractPdf}
               width={"100%"}
               height={"900px"}
             ></iframe>
