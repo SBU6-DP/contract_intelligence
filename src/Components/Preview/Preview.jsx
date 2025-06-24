@@ -530,11 +530,12 @@ function Preview() {
     axios
       .get(`http://localhost:8006/icontract/backend/AllColumns/${location?.state?.contractNum}`)
       .then((res) => {
-        console.log(res);
-        setContractOffer(res.contracts);
-        setTierSummary(res.tier_structures)
-        setTierDataProduct(res.products)
-        setUrl(res.file_info)
+        setIsLoading(false)
+        console.log(res.data);
+        setContractOffer(res?.data?.contracts[0]);
+        setTierSummary(res?.data?.tier_structures)
+        setTierDataProduct(res?.data?.products)
+        setUrl(res?.data?.file_info)
       })
       .catch((err) => {
         console.log(err);
@@ -622,7 +623,7 @@ function Preview() {
           {/* Left Side: File Preview */}
           <Col lg="8" className="left-nav">
             <iframe
-              src={url ? `${url?.file_url}` : contractPdf}
+              src={url ? `${url?.file_url}` : ''}
               width={"100%"}
               height={"900px"}
             ></iframe>

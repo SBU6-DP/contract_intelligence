@@ -50,40 +50,93 @@ function Upload() {
   setFiles((prev) => prev.filter((f) => f.id !== id));
 };
 
-  const handleUpload = async() => {
-    toast.loading("Uploading...", {
-      duration: Infinity,
-    });
+  // const handleUpload = async() => {
+  //   toast.loading("Uploading...", {
+  //     duration: Infinity,
+  //   });
 
-    if (files.length<=0) {
-      return alert("Please upload file");
-    }
+  //   if (files.length<=0) {
+  //     return alert("Please upload file");
+  //   }
 
    
 
-    files.forEach(async (li) => {
-      const formData = new FormData();
-      formData.append("file", li.file);
+  //   files.forEach(async (li) => {
+  //     const formData = new FormData();
+  //     formData.append("file", li.file);
 
-      await axios
-        .post(
-          "http://localhost:8006/icontract/backend/uploadtos3",
-          formData
-        )
-        .then((res) => {
-          console.log(res);
-          toast.remove();
-          toast.success("Upload Completed");
-          navigate('/list')
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
+  //     await axios.post("http://localhost:8006/icontract/process_contract",formData)
+  //     .then((res)=>{
+  //       toast.remove();
+  //         toast.success("Extraction Completed");
+  //     }).catch((err)=>{
+  //       console.log(err)
+  //     })
+
+  //     await axios
+  //       .post(
+  //         "http://localhost:8006/icontract/backend/uploadtos3",
+  //         formData
+  //       )
+  //       .then((res) => {
+  //         console.log(res);
+  //         toast.remove();
+  //         toast.success("Upload Completed");
+  //         navigate('/list')
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   });
 
 
     
-  };
+  // };
+
+  const handleUpload = () => {
+  if (files.length <= 0) {
+    return alert("Please upload file");
+  }
+
+  toast.loading("Uploading...", { duration: Infinity });
+
+  // Sequential Promise chain
+  let chain = Promise.resolve();
+
+  files.forEach((li) => {
+    chain = chain
+      .then(() => {
+        const formData = new FormData();
+        formData.append("file", li.file);
+
+        // First: process the contract
+        return axios.post("http://localhost:8006/icontract/process_contract", formData);
+      })
+      .then((processRes) => {
+        toast.success("Extraction Completed");
+
+        const formData = new FormData();
+        formData.append("file", li.file);
+
+        // Then: upload to S3
+        return axios.post("http://localhost:8006/icontract/backend/uploadtos3", formData);
+      })
+      .then((uploadRes) => {
+        toast.success("Upload Completed");
+      })
+      .catch((err) => {
+        console.error("Error during file upload:", err);
+        toast.error("Error occurred for one of the files");
+        // Continue chain, don't break it on error
+      });
+  });
+
+  chain.finally(() => {
+    toast.remove();
+    navigate('/list');
+  });
+};
+
 
   return (
     <Layouts>

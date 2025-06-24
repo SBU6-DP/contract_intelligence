@@ -22,7 +22,7 @@ function ContractFile() {
     const getContractList = async()=>{
       setIsLoading(true)
       request({
-        url:'/icontract/backend/list_contracts'
+        url:'/icontract/backend/columns/names'
       }).then((res)=>{
         setIsLoading(false)
         setContractList(res.data)
@@ -180,7 +180,7 @@ function ContractFile() {
                   <tbody>
                     {
                       isLoading ? <div>Loading...</div> : (
-                        contractList.length>0 && contractList?.map((doc)=>{
+                        contractList?.length>0 && contractList?.map((doc)=>{
                             return <tr onClick={()=>sendtoPreview(doc?.contract_number)} className='contract-result-list'>
                       <th scope="col">
                         <input type="checkbox" />
