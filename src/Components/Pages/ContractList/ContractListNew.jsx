@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Layouts from "../Layouts/Layouts";
 import "./contractlist.css";
-
+import maximizelight from'./../../../images/icons/Maxi-L.svg'
 import DatePicker from "react-datepicker";
-
+import lightfile from'../../../images/icons/dash-total-light.svg'
 import maximize from "../../../images/icons/maximize.svg";
 import eyeCrossImg from "../../../images/icons/eye-off.svg";
 import pdfIcon from "../../../images/icons/pdf-grey-i.svg";
 import request from "../../../api/api";
+import gridSel from './../../../images/icons/Gridwhite-selected.svg'
+import gridnotSel from './../../../images/icons/Gridwhite-notselected.svg'
+import fileSel from './../../../images/icons/File-white-selected.svg'
+import filenotSel from './../../../images/icons/File-white-notselected.svg';
 import serachImg from "../../../images/icons/search-sm.svg";
 import fileImg from "../../../images/icons/file-06.svg";
 import filedarkImg from "../../../images/icons/file-dark.svg";
@@ -15,6 +19,8 @@ import filewhiteImg from "../../../images/icons/file-white.svg";
 import griddarkImg from "../../../images/icons/grid-dark.svg";
 import gridwhiteImg from "../../../images/icons/grid-white.svg";
 import alertImg from "../../../images/icons/alert-triangle.svg";
+import pdfwhitee from '../../../images/icons/File-white-pdf.svg';
+
 import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Badge, Button, ButtonGroup, Card, CardBody, Nav, NavItem, NavLink } from "reactstrap";
 import Select from "react-select";
 import { truncate } from "lodash";
@@ -23,6 +29,7 @@ import { useDispatch } from "react-redux";
 import { saveContracts } from "../../redux/features/contractSlice";
 import { data, useNavigate } from "react-router-dom";
 import ContractCard from "../../Skeleton-loading/ContractCard";
+import { useTheme } from "../../../Themecontext";
 
 
 
@@ -107,49 +114,49 @@ const colourStyles = {
   }),
   control: (styles, { isFocused }) => ({
     ...styles,
-    backgroundColor: "#0C111D",
+    backgroundColor: "var(--select-option-bg-color)",
     cursor: "pointer",
     minHeight: "40px",
     borderRadius: "8px",
-    borderColor: isFocused ? "#1F242F" : "#1F242F",
+    borderColor: isFocused ? "var(--select-option-boder-focused)" : "var(--select-option-boder-focused)",
     boxShadow: "none",
     ":hover": {
-      borderColor: "#722ED1",
+      borderColor: "var(--select-option-border-onhover)",
     },
   }),
   menu: (styles) => ({
     ...styles,
-    backgroundColor: "#0C111D",
-    border: "1px solid #1F242F",
+    backgroundColor: "var(--bg-color-select-still)",
+    border: "1px solid var(--select-document-type-border)",
     zIndex: 9999,
   }),
   option: (styles, { isFocused }) => ({
     ...styles,
     cursor: "pointer",
-    backgroundColor: isFocused ? "grey" : "#1f2935",
-    color: "#F5F5F6",
+    backgroundColor: isFocused ? "var(--select-option-boder-focused)" : "var(--select-option-bg-color)",
+    color: "var(--document-type-font-color)",
     ":hover": {
-      backgroundColor: "grey",
+      backgroundColor: "var(--document-type-hover)",
     },
     fontSize: "14px",
   }),
   placeholder: (styles) => ({
     ...styles,
-    color: "#85888E",
+    color: "var(--placeholder-text)",
     fontSize: "14px",
   }),
   singleValue: (styles) => ({
     ...styles,
-    color: "#F5F5F6",
+    color: "var(--text)",
   }),
   indicatorSeparator: () => ({
     display: "none",
   }),
   dropdownIndicator: (styles) => ({
     ...styles,
-    color: "#85888E",
+    color: "var(--text)",
     ":hover": {
-      color: "#85888E",
+      color: "var(--placeholder-text)",
     },
   }),
 };
@@ -229,6 +236,7 @@ const pricingOption = [
 function ContractListNew() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const { theme, toogleTheme } = useTheme();
     const [isLoading, setIsLoading] = useState(true);
   const [contractList, setContractList] = useState([]);
   const [activeTab, setActiveTab] = useState(1);
@@ -412,14 +420,14 @@ function ContractListNew() {
                 <div className="menu-head-count">
                   <div className="total">
                     <div className="ico">
-                      <img src={fileImg} />
+                      <img src={theme === "Dark" ? fileImg : lightfile} />
                     </div>
                     <div className="d-flex align-items-center">
                       Total Contracts
                       <span className="count">{contractList?.length}</span>
                     </div>
                   </div>
-                  <div className="expire">
+                  {/* <div className="expire">
                     <div className="ico orange">
                       <img src={alertImg} />
                     </div>
@@ -427,13 +435,13 @@ function ContractListNew() {
                       Expiring in next 30 days
                       <span className="count">{contractList?.length}</span>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="d-flex align-items-center">
                   {active === "grid" ? (
                     ""
                   ) : (
-                    <h3 className="m-0">
+                    <h3 className="me-3 mb-0">
                       {selectedData?.length} Contract Documents Selected
                     </h3>
                   )}
@@ -447,7 +455,15 @@ function ContractListNew() {
                     >
                       <span className="icon">
                         <img
-                          src={active === "grid" ? gridwhiteImg : griddarkImg}
+                          src={
+                            active === "grid"
+                              ? theme === "Dark"
+                                ? gridwhiteImg
+                                : gridSel
+                              : theme === "light"
+                              ? griddarkImg
+                              : gridnotSel
+                          }
                         />
                       </span>
                     </button>
@@ -459,7 +475,15 @@ function ContractListNew() {
                     >
                       <span className="icon">
                         <img
-                          src={active === "doc" ? filewhiteImg : filedarkImg}
+                          src={
+                            active === "doc"
+                              ? theme === "Dark"
+                                ? filewhiteImg
+                                : fileSel
+                              : theme === "light"
+                              ? filedarkImg
+                              : filenotSel
+                          }
                         />
                       </span>
                     </button>
@@ -487,7 +511,11 @@ function ContractListNew() {
                     {contractList?.length > 0 &&
                       contractList?.map((list, index) => {
                         return (
-                          <div className="contract-doc-list" key={index}>
+                          <div
+                            className="contract-doc-list"
+                            key={index}
+                            style={{ cursor: "pointer" }}
+                          >
                             <label class="checkbox-container">
                               <input
                                 type="checkbox"
@@ -497,7 +525,7 @@ function ContractListNew() {
                             </label>
                             <div className="doc-name-id">
                               <h5 className="name" title={list?.document_name}>
-                                {truncate(list?.document_name, { length: 40 })}
+                                {truncate(list?.document_name, { length: 48 })}
                               </h5>
                               <h5 className="id">{list?.contract_number}</h5>
                             </div>
@@ -518,8 +546,11 @@ function ContractListNew() {
                               activeContractTab === list?.id ? "active" : ""
                             }`}
                             onClick={() => setActiveContractTab(list?.id)}
+                            title={list.document_name}
                           >
-                            {truncate(list.document_name, { length: 20 })}
+                            {truncate(list.document_name, {
+                              length: activeContractTab === list?.id ? 40 : 20,
+                            })}
                           </div>
                         );
                       })}
@@ -540,9 +571,7 @@ function ContractListNew() {
                       <div class="contract-details-box">
                         <div className="details-head">
                           <h3>Contract Details</h3>
-                          <div>
-                            <img src={maximize} />
-                          </div>
+                          <div>{/* <img src={maximize} /> */}</div>
                         </div>
                         <div className="contract-acc-box list-view">
                           <Accordion
@@ -561,7 +590,13 @@ function ContractListNew() {
                                     {Object.entries(
                                       showSelected.contracts[0]
                                     ).map(([key, value], index) =>
-                                      key !== "id" ? (
+                                      key !== "id" &&
+                                      key !== "created_at" &&
+                                      key !== "updated_at" &&
+                                      key !== "adjust_by" &&
+                                      key !== "category_pricing" &&
+                                      key !== "price_list_name" &&
+                                      key !== "pricing_method" ? (
                                         <tr key={index}>
                                           <td>
                                             <span className="text-capitalize">
@@ -622,9 +657,10 @@ function ContractListNew() {
                     <div>
                       <div class="contract-details-box right">
                         <div className="details-head">
-                          <h3>Tier Stucture</h3>
+                          <h3>Tier Structure</h3>
                           <div>
                             <img src={maximize} />
+                            {/* {theme==="Light"? <img src={maximizelight}/>:<img src={maximize}/>} */}
                           </div>
                         </div>
                         <div className="contract-acc-box list-view">
@@ -678,7 +714,7 @@ function ContractListNew() {
                         <div className="product-table-container">
                           <table className="product-tier-table">
                             <thead>
-                              <tr>
+                              <tr className="head-sticky">
                                 <th width={"20%"}>NDC Number</th>
                                 <th>Product Number</th>
                                 <th>Size</th>
@@ -695,32 +731,31 @@ function ContractListNew() {
                                 className="product-accordion"
                               >
                                 <AccordionItem>
-                                  <AccordionHeader targetId={`item-${index}`}>
-                                    <table className="">
-                                      <tbody>
-                                        <tr>
-                                          <td width={"25%"}>
-                                            {item?.ndc_number}
-                                          </td>
-                                          <td width={"25%"}>
-                                            {item?.product_name}
-                                          </td>
-                                          <td width={"25%"}>{item?.size}</td>
-                                          <td>{item?.wac_price}</td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-
-                                    {/* <div className="product-header-row">
-                                <div>
-                                  <strong>{item.ndc}</strong>
-                                </div>
-                                <div className="product-name">{item.name}</div>
-                                <div className="product-size">{item.size}</div>
-                                <div className="product-price">
-                                  ${item.price.toFixed(2)}
-                                </div>
-                              </div> */}
+                                  <AccordionHeader
+                                    targetId={`item-${index}`}
+                                    className="product-header"
+                                  >
+                                    <div
+                                      className="product-header-cell"
+                                      style={{ width: "25%" }}
+                                    >
+                                      {item?.ndc_number}
+                                    </div>
+                                    <div
+                                      className="product-header-cell"
+                                      style={{ width: "25%" }}
+                                    >
+                                      {item?.product_name}
+                                    </div>
+                                    <div
+                                      className="product-header-cell"
+                                      style={{ width: "25%" }}
+                                    >
+                                      {item?.size}
+                                    </div>
+                                    <div className="product-header-cell">
+                                      {item?.wac_price}
+                                    </div>
                                   </AccordionHeader>
                                   <AccordionBody accordionId={`item-${index}`}>
                                     {item?.tiers?.length > 0 ? (
@@ -729,7 +764,7 @@ function ContractListNew() {
                                           <tr className="price-th">
                                             <th>Tier</th>
                                             <th>Discount</th>
-                                            <th>Final Prize</th>
+                                            <th>Final Price</th>
                                             <th>Savings</th>
                                           </tr>
                                         </thead>
@@ -835,6 +870,9 @@ function ContractListNew() {
                         <Select
                           styles={colourStyles}
                           options={docTypeOption}
+                          value={docTypeOption?.filter(
+                            (li) => li.value === filterOption?.document_type
+                          )}
                           onChange={(e) =>
                             setFilterOption({
                               ...filterOption,
@@ -930,7 +968,7 @@ function ContractListNew() {
                           <span class="custom-radio"></span>
                           Last 12 Month
                         </label>
-                        <label class="radio-option">
+                        {/* <label class="radio-option">
                           <input
                             type="radio"
                             name="custom"
@@ -941,7 +979,7 @@ function ContractListNew() {
                           />
                           <span class="custom-radio"></span>
                           Custom
-                        </label>
+                        </label> */}
                         {filterOption?.date_range === "custom" && (
                           <div className="date-picker-container">
                             <label>From Date</label>
@@ -986,6 +1024,9 @@ function ContractListNew() {
                         <Select
                           styles={colourStyles}
                           options={pricingOption}
+                          value={pricingOption?.filter(
+                            (li) => li.value === filterOption?.pricing_method
+                          )}
                           onChange={(e) =>
                             setFilterOption({
                               ...filterOption,
@@ -1065,7 +1106,7 @@ function ContractListNew() {
                           className="apply-btn"
                           onClick={() => applyGridFilter()}
                         >
-                          Apply filter
+                          Apply filters
                         </button>
                       </div>
                     </div>
@@ -1092,116 +1133,143 @@ function ContractListNew() {
                     <div className="col-4 mb-3">
                       <ContractCard />
                     </div>
-                     <div className="col-4 mb-3">
+                    <div className="col-4 mb-3">
                       <ContractCard />
                     </div>
-                     <div className="col-4 mb-3">
+                    <div className="col-4 mb-3">
                       <ContractCard />
                     </div>
-                     <div className="col-4 mb-3">
+                    <div className="col-4 mb-3">
                       <ContractCard />
                     </div>
-                     <div className="col-4 mb-3">
+                    <div className="col-4 mb-3">
                       <ContractCard />
                     </div>
-                     <div className="col-4 mb-3">
+                    <div className="col-4 mb-3">
                       <ContractCard />
                     </div>
-                     <div className="col-4 mb-3">
+                    <div className="col-4 mb-3">
                       <ContractCard />
                     </div>
-                     <div className="col-4 mb-3">
+                    <div className="col-4 mb-3">
                       <ContractCard />
                     </div>
-                     <div className="col-4 mb-3">
+                    <div className="col-4 mb-3">
                       <ContractCard />
                     </div>
                   </div>
                 ) : (
                   <div className="row grid-card-row">
-                  {gridContractData?.length > 0 &&
-                    gridContractData?.map((list) => {
-                      return (
-                        <div className="col-4 p-0">
-                          <div
-                            className="grid-card"
-                            onClick={() =>
-                              sendtoPreview(list?.contracts[0]?.contract_number,list?.contracts[0]?.document_version_number)
-                            }
-                          >
-                            <div className="grid-card-head">
-                              <img src={pdfIcon} />
-                              <div className="grid-card-data">
-                                <h3>
-                                  {truncate(list?.contracts[0]?.document_name, {
-                                    length: 25,
-                                  })}
-                                </h3>
-                                <h6>{list?.contracts[0]?.contract_number}</h6>
-                                <div className="doc-version">
-                                  <div className="--v">
-                                    Version -{" "}
-                                    {
-                                      list?.contracts[0]
-                                        ?.document_version_number
-                                    }
-                                  </div>
-                                  <div className="status text-center">
-                                    {list?.contracts[0]?.document_status}
+                    {gridContractData?.length > 0 &&
+                      gridContractData?.map((list) => {
+                        return (
+                          <div className="col-4 p-0">
+                            <div
+                              className="grid-card"
+                              onClick={() =>
+                                sendtoPreview(
+                                  list?.contracts[0]?.contract_number,
+                                  list?.contracts[0]?.document_version_number
+                                )
+                              }
+                            >
+                              <div className="grid-card-head">
+                                <img
+                                  src={theme === "Dark" ? pdfIcon : pdfwhitee}
+                                />
+                                <div className="grid-card-data">
+                                  <h3>
+                                    {truncate(
+                                      list?.contracts[0]?.document_name,
+                                      {
+                                        length: 40,
+                                      }
+                                    )}
+                                  </h3>
+                                  <h6>{list?.contracts[0]?.contract_number}</h6>
+                                  <div className="doc-version">
+                                    <div className="--v">
+                                      Version -{" "}
+                                      {
+                                        list?.contracts[0]
+                                          ?.document_version_number
+                                      }
+                                    </div>
+                                    <div className="status text-center">
+                                      {list?.contracts[0]?.document_status}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <hr />
-                            <div className="grid-details">
-                              <div>
-                                <span className="type">Type</span>{" "}
-                                <span className="value">
-                                  {list?.contracts[0]?.document_type}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="type">Customer</span>{" "}
-                                <span className="value">
-                                  {list?.contracts[0]?.author}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="type">Author</span>{" "}
-                                <span className="value">
-                                  {list?.contracts[0]?.author}
-                                </span>
-                              </div>
-                            </div>
-                            <hr />
-                            <div className="grid-date">
-                              <div className="pe-3">
-                                <div className="start">Start date</div>
-                                <div className="date">
-                                  {list?.contracts[0]?.start_date &&
-                                    format(
-                                      new Date(list?.contracts[0]?.start_date),
-                                      "dd MMM yyyy"
-                                    )}
+                              <hr
+                                style={{
+                                  borderColor: theme==="Dark" ? "#eee" : "#333",
+                                  height: 2,
+                                  borderWidth: 1,
+                                  opacity: 0.1,
+                                }}
+                              />
+                              <div className="grid-details">
+                                <div>
+                                  <span className="type">Type</span>{" "}
+                                  <span className="value">
+                                    {list?.contracts[0]?.document_type}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="type">Customer</span>{" "}
+                                  <span className="value">
+                                    {list?.contracts[0]?.author}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="type">Author</span>{" "}
+                                  <span className="value">
+                                    {list?.contracts[0]?.author}
+                                  </span>
                                 </div>
                               </div>
-                              <div>
-                                <div className="start">End date</div>
-                                <div className="date">
-                                  {list?.contracts[0]?.end_date &&
-                                    format(
-                                      new Date(list?.contracts[0]?.end_date),
-                                      "dd MMM yyyy"
-                                    )}
+                              <hr
+                                style={{
+                                  borderColor: theme==="Dark" ? "#eee" : "#333",
+                                  height: 2,
+                                  borderWidth: 1,
+                                  opacity: 0.1,
+                                }}
+                              />
+                              <div className="grid-date">
+                                <div
+                                  className=""
+                                  style={{ paddingRight: "36px" }}
+                                >
+                                  <div className="start">Start Date</div>
+                                  <div className="date">
+                                    {list?.contracts[0]?.start_date &&
+                                      format(
+                                        new Date(
+                                          list?.contracts[0]?.start_date
+                                        ),
+                                        "dd MMM yyyy"
+                                      )}
+                                  </div>
+                                </div>
+                                <div>
+                                 <div className="start">End Date</div>
+                                  <div className="date">
+                                    {list?.contracts[0]?.end_date &&
+                                      format(
+                                        new Date(list?.contracts[0]?.end_date),
+                                        "dd MMM yyyy"
+                                      )}
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
 
-                  {/* <div className="col-4 p-0">
+                    {/* <div className="col-4 p-0">
                     <div className="grid-card">
                       <div className="grid-card-head">
                         <img src={pdfIcon} />
@@ -1348,9 +1416,8 @@ function ContractListNew() {
                       </div>
                     </div>
                   </div> */}
-                </div>
+                  </div>
                 )}
-                
               </div>
             </>
           )}

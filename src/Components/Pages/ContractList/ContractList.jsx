@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Layouts from "../Layouts/Layouts";
 import "./contractlist.css";
-
+import lightfile from'../../../images/icons/dash-total-light.svg'
 import maximize from "../../../images/icons/maximize.svg";
 import request from "../../../api/api";
 import serachImg from "../../../images/icons/search-sm.svg";
 import fileImg from "../../../images/icons/file-06.svg";
 import alertImg from "../../../images/icons/alert-triangle.svg";
 import { Badge, Nav, NavItem, NavLink } from "reactstrap";
+import { useTheme } from "../../../Themecontext";
 
 function ContractList() {
   const [isLoading, setIsLoading] = useState(true);
   const [contractList, setContractList] = useState([]);
   const [activeTab, setActiveTab] = useState(1);
+  const { theme, toogleTheme } = useTheme();
+  console.log(theme);
 
   const getContractList = () => {
     setIsLoading(true);
@@ -114,7 +117,7 @@ function ContractList() {
             <div className="menu-head-count">
               <div className="total">
                 <div className="ico">
-                  <img src={fileImg} />
+                  <img src={theme==="Dark" ? fileImg: lightfile} />
                 </div>
                 <div className="d-flex align-items-center">
                   Total Contracts<span className="count">252</span>

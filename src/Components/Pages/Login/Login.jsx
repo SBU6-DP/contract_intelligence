@@ -6,6 +6,7 @@ import { useMsal } from "@azure/msal-react";
 import nexus from "../../../images/Logo/NexusLabs-Logo.png";
 import srm_white_logo from "../../../images/Logo/logo_srm_white.png";
 import loginimg from "../../../images/Logo/login-img.jpg";
+import SRM from '../../../images/Logo/SRM_login_logo.svg'
 
 function Login() {
   const { instance } = useMsal();
@@ -36,8 +37,8 @@ function Login() {
   };
 
   const login = () => {
-    // instance.loginRedirect({ scopes: ["user.read"] });
-    navigate('/list')
+    instance.loginRedirect({ scopes: ["user.read"] });
+    // navigate('/list')
   };
   return (
     <div className="container-fluid login-bg">
@@ -46,6 +47,9 @@ function Login() {
           <div className="login-left">
             <div className="login-part">
               <div className="login-head">
+                <div>
+                  <img src={SRM} className="login-srm"/>
+                </div>
                 <h4>IntelliContract</h4>
                 <h6>Welcome back! Please enter your details.</h6>
               </div>

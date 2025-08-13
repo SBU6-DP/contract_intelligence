@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./chat.css";
 import Layouts from "../Layouts/Layouts";
 import { useMsal } from "@azure/msal-react";
@@ -7,8 +7,10 @@ import logo from "../../../images/icons/SRM_chat-logo.svg";
 import pdfRedIcon from "../../../images/icons/pdf-red-icon.svg";
 import close from "../../../images/icons/x-close.svg";
 import maximize from "../../../images/icons/maximize.svg";
+import loadingImg from "../../../images/icons/Group 3.svg";
+import lightLoading from "../../../images/icons/lightLoading.svg";
 import pricingPdf from "./Product_Pricing_Table.pdf";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Accordion, AccordionBody, AccordionHeader, AccordionItem, Modal, ModalBody, ModalHeader } from "reactstrap";
 import request from "../../../api/api";
 import { useDispatch, useSelector } from "react-redux";
 import ReactMarkdown from 'react-markdown';
@@ -17,6 +19,10 @@ import {
   addMessageByUser,
 } from "../../redux/features/chat.bot";
 import axios from "axios";
+import { loadingStatus } from "../../Preview/Preview";
+import toast from "react-hot-toast";
+import { useTheme } from "../../../Themecontext";
+import PDFViewer from "../../PdfView/PdfViewer";
 
 const messages = [
   {
@@ -32,6 +38,8 @@ const messages = [
 
 function Chat() {
   const { chatMessages } = useSelector((state) => state.chat);
+  const { theme, toogleTheme } = useTheme();
+  const chatEndRef = useRef(null);
   const dispatch = useDispatch();
   const { instance, accounts } = useMsal();
   const [isMaxi, setIsMaxi] = useState(false);
@@ -39,56 +47,117 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sendMessage, setSendMessage] = useState("");
-  const[pdfUrl,setPdfUrl]= useState('')
+  const [activeTab,setActiveTab] = useState('entities')
+   const [accordionOpen, setAccordionOpen] = useState("");
+   const [isDataLoading,setIsDatLoading] = useState(true)
+   const [entities,setEntities] = useState({})
+   const [statusIndex, setStatusIndex] = useState(0);
+  const[pdfUrl,setPdfUrl]= useState({
+    url:'',
+    filename:''
+  })
+  const [sampleQ,setSampleQ] = useState([])
 
-  const chatMessage = () => {
+  const chatMessage = (msg) => {
     setIsLoading(true);
-    dispatch(addMessageByUser(sendMessage));
-    axios.post('https://intell-chatbot.srm-tech.com/icontract/chatbot/ask',{question:sendMessage}).then((res) => {
+    let question = sendMessage 
+    if(msg){
+      question = msg
+    }
+   
+    if(!question) {
+      return toast.error("Please Enter Something!")
+    }
+    setSendMessage("");
+    dispatch(addMessageByUser(question));
+    axios.post('https://intell-chatbot.srm-tech.com/icontract/chatbot/ask',{question:question}).then((res) => {
         setIsLoading(false);
-        setSendMessage("");
+        
         // setMessages(res?.data?.);
         dispatch(addMessageByBot(res?.data))
       })
       .catch((err) => {
         console.log(err);
+        setSendMessage('')
       });
   };
 
-  const loadPdf = (filename) => {
+  const loadPdf = (filename,contract_number,version) => {
   axios
     .get(`https://icontract-backend.srm-tech.com/icontract/backend/download/${filename}`, {
       responseType: 'blob',  // Important to handle PDF correctly
     })
-    .then((res) => {
-      setIsPdfPreview(!isPdfPreview);
+    .then(async(res) => {
+      if(!isPdfPreview) setIsPdfPreview(!isPdfPreview);
       let blobUrl = URL.createObjectURL(res.data);
       console.log(blobUrl);
-      setPdfUrl(blobUrl);
+      setPdfUrl({
+        url:blobUrl,
+        filename:filename
+      });
+      
+      if(contract_number) fetchActiveContract(contract_number,version)
     })
     .catch((err) => {
       console.log(err);
     });
 };
 
-  const renderBulletPoints = (text) => {
-  const lines = text.split("\n").filter(line => line.trim() !== "");
-  const bullets = lines.filter(line => line.trim().startsWith("-"));
-  const otherText = lines.filter(line => !line.trim().startsWith("-"));
+const fetchActiveContract =(contract_number,version)=>{
+  setIsDatLoading(true)
+    request({
+         url:`/icontract/backend/AllColumns/${contract_number}/${version}`,
+        method:'GET',
+    }).then((res)=>{
+        console.log(res)
+        if(res.success){
+          setIsDatLoading(false)
+            setEntities(res)
+        }
+    }).catch((err)=>{
+        console.log(err)
+    })
+  }
 
-  return (
-    <>
-      {otherText.length > 0 && <p>{otherText[0]}</p>}
-      <ul>
-        {bullets.map((line, idx) => (
-          <li key={idx} dangerouslySetInnerHTML={{ __html: line.replace(/^- /, "") }} />
-        ))}
-      </ul>
-      {otherText.length > 1 && <p>{otherText.slice(1).join(" ")}</p>}
-    </>
-  );
-};
 
+const getSampleQuestion =()=>{
+  axios.get('https://intell-chatbot.srm-tech.com/icontract/chatbot/sample_questions').then((res)=>{
+      setSampleQ(res.data?.sample_questions?.splice(0,3))
+  }).catch((err)=>{
+    console.log(err)
+  })
+}
+
+useEffect(()=>{
+  if(sendMessage==='') setMessages('')
+},[sendMessage])
+
+useEffect(()=>{
+  getSampleQuestion()
+},[])
+
+
+ const toggleAccordion = (id) => {
+    if (accordionOpen.includes(id)) {
+      setAccordionOpen((prev) => prev.filter((item) => item !== id)); // remove if already open
+    } else {
+      setAccordionOpen((prev) => [...prev, id]); // add if not open
+    }
+  };
+
+ useEffect(() => {
+    if (!isDataLoading) return;
+
+    const interval = setInterval(() => {
+      setStatusIndex((prevIndex) => (prevIndex + 1) % loadingStatus.length);
+    }, 8000); // 10 seconds
+
+    return () => clearInterval(interval); // cleanup
+  }, [isDataLoading]);
+
+    useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages])
 
 
   return (
@@ -103,8 +172,25 @@ function Chat() {
                 </h1>
                 <h1 className="chat-help">How can I help you?</h1>
                 <div className="initial-question">
-                  <div className="row">
-                    <div className="col-4">
+                  <div className="row g-2">
+                    {sampleQ?.length > 0 &&
+                      sampleQ?.map((que) => {
+                        return (
+                          <div className="col-4">
+                            <div className="q-box">
+                              <h6>{que}</h6>
+                              <div className="text-end ex-link">
+                                <img
+                                  src={externalLink}
+                                  onClick={() => chatMessage(que)}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                    {/* <div className="col-4">
                       <div className="q-box">
                         <h6>Explain how rebate tiers are calculated?</h6>
                         <div className="text-end ex-link">
@@ -119,15 +205,7 @@ function Chat() {
                           <img src={externalLink} />
                         </div>
                       </div>
-                    </div>
-                    <div className="col-4">
-                      <div className="q-box">
-                        <h6>Explain how rebate tiers are calculated?</h6>
-                        <div className="text-end ex-link">
-                          <img src={externalLink} />
-                        </div>
-                      </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -151,8 +229,8 @@ function Chat() {
                           <div className="chat-msg ">
                             <div className="by">SRM Bot</div>
                             <div className="msg">
-                              <ReactMarkdown>
-                                {msg?.message?.answer}
+                              <ReactMarkdown >
+                                {msg?.message?.answer.replace(/•/g,'-')}
                               </ReactMarkdown>
                               {/* {renderBulletPoints()} */}
                             </div>
@@ -162,15 +240,24 @@ function Chat() {
                                   {msg?.message?.contract_filenames.length >
                                     0 && (
                                     <>
-                                      <span className="text-secondary">Source{" "}</span>
+                                      <span className="text-secondary">
+                                        Source{" "}
+                                      </span>
                                       {msg?.message?.contract_filenames?.map(
                                         (pdf) => {
+                                          let contract =
+                                            msg?.message?.sql_results?.find(
+                                              (li) => li.document_path === pdf
+                                            );
+                                            console.log(contract)
                                           return (
                                             <>
                                               <img
                                                 src={pdfRedIcon}
                                                 className="pdf-icons"
-                                                onClick={() => loadPdf(pdf)}
+                                                onClick={() =>
+                                                  loadPdf(pdf, contract?.contract_number,contract?.document_version_number)
+                                                }
                                                 title={pdf}
                                               />
                                             </>
@@ -200,34 +287,40 @@ function Chat() {
                   );
                 })}
                 <>
-                {
-                    isLoading? <>
-                            <div className="chat-left">
-                              <div className="logo-round">
-                                <img src={logo} className="srm-bot" />
-                              </div>
-                              <div className="chat-msg ">
-                                <div className="by">SRM Bot</div>
-                                <div>
-                                  <div class="loader">
-                                    <li class="ball"></li>
-                                    <li class="ball"></li>
-                                    <li class="ball"></li>
-                                  </div>
-                                </div>
-                              </div>
+                  {isLoading ? (
+                    <>
+                      <div className="chat-left">
+                        <div className="logo-round">
+                          <img src={logo} className="srm-bot" />
+                        </div>
+                        <div className="chat-msg ">
+                          <div className="by">SRM Bot</div>
+                          <div>
+                            <div class="loader">
+                              <li class="ball"></li>
+                              <li class="ball"></li>
+                              <li class="ball"></li>
                             </div>
-                          </>:''
-                }
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    ""
+                  )}
                 </>
               </>
             )}
+            <div ref={chatEndRef} />
           </div>
           <div className="chat-search">
             <input
               className="chat-search-input"
               value={sendMessage}
-              onChange={(e) => setSendMessage(e.target.value)}
+              onChange={(e) => {
+                setSendMessage(e.target.value);
+              }}
+              onKeyDown={(e) => e.key === "Enter" && chatMessage()}
             />
             <div>
               <button
@@ -239,7 +332,7 @@ function Chat() {
         </div>
         <div className={`chat-preview-pdf ${isPdfPreview ? "" : "preview"}`}>
           <div className="pdf-preview-head">
-            <div className="pdf-head">Contract Document SM123455.PDF</div>
+            <div className="pdf-head">{pdfUrl?.filename}</div>
             <div>
               <button
                 className="pdf-close me-4"
@@ -255,19 +348,234 @@ function Chat() {
               </button>
             </div>
           </div>
-          <iframe src={pdfUrl} width={"90%"} height={"950px"}></iframe>
+          <div className="pdf-nav">
+            <div
+              className={`tab-1 ${activeTab === "entities" ? "active" : ""}`}
+              onClick={() => setActiveTab("entities")}
+            >
+              Contract Entities
+            </div>
+            <div class="divider"></div>
+            <div
+              className={`tab-1 ${activeTab === "preview" ? "active" : ""}`}
+              onClick={() => setActiveTab("preview")}
+            >
+              File Preview
+            </div>
+          </div>
+          <div>
+            { activeTab === "entities" ? (
+              isDataLoading ? (
+              <>
+                <div className="container my-5 p-0 loading-contract">
+                  <div className="w-50 m-auto text-center">
+                    <img src={theme ==="Dark" ? loadingImg :lightLoading} className="loadingimg" />
+                    <h5 className="loading-info">
+                      <i>{loadingStatus[statusIndex]}</i>
+                    </h5>
+                  </div>
+                </div>
+              </>
+            ) :
+              <div className="chat-preview-acc-box">
+                <Accordion
+                  open={accordionOpen}
+                  toggle={toggleAccordion}
+                  flush
+                  className="chat-preview-acc"
+                >
+                  <AccordionItem>
+                    <AccordionHeader targetId={1}>
+                      Contract Offer
+                    </AccordionHeader>
+                    <AccordionBody accordionId={1}>
+                      <ul className="acc-list-data">
+                        {entities?.contracts.length > 0 &&
+                          Object.entries(entities?.contracts[0]).map(
+                            ([key, value], index) => (
+                              key !=="id" ?
+                              <li key={index}>
+                                <span className="text-capitalize">
+                                  {key.replace(/_/g, " ")}:
+                                </span>
+                                {String(value)}
+                              </li>
+                            :'')
+                          )}
+                      </ul>
+                    </AccordionBody>
+                  </AccordionItem>
+                  <AccordionItem>
+                    <AccordionHeader targetId={2}>
+                      Product Group
+                    </AccordionHeader>
+                    <AccordionBody accordionId={2}>
+                      <ul className="acc-list-data">
+                        {entities?.contracts?.length > 0 &&
+                          Object.entries(entities?.contracts[0])
+                            .filter(([key]) =>
+                              [
+                                "adjust_by",
+                                "category_pricing",
+                                "price_list_name",
+                                "pricing_method",
+                              ].includes(key)
+                            )
+                            .map(([key, value], index) =>
+                              (
+                                <li key={index}>
+                                  <span className="text-capitalize">
+                                   {key.replace(/_/g, " ")}:
+                                  </span>{" "}
+                                  {String(value)}
+                                </li>
+                              ) 
+                            )}
+                      </ul>
+                    </AccordionBody>
+                  </AccordionItem>
+
+                  <AccordionItem>
+                    <AccordionHeader targetId={3} className="tiered-head">
+                      Tiered Summary
+                    </AccordionHeader>
+                    <AccordionBody accordionId={3} className="tiered-body">
+                      {entities?.tier_structures.length>0 && entities?.tier_structures?.map((list, idx) => {
+                          return (
+                            <ul className="acc-list-data tiered">
+                              <li className="hdr">
+                                <h6>
+                                  Tier Level :
+                                  <span className="cnt">0{list?.tier_level}</span>{" "}
+                                </h6>
+                              </li>
+                              <li className="hdr">
+                                <div className="d-flex justify-content-between text-start">
+                                  <div className="ndc-num ndc-bg">
+                                    <span className="tier-span">
+                                      Purchase Volume Min
+                                    </span>
+                                    <h5>{list?.volume_min ?? "-"}</h5>
+                                  </div>
+                                  <div className="wac-price ndc-bg">
+                                    <span className="tier-span">
+                                      Purchase Volume Max
+                                    </span>
+                                    <h5 className="">
+                                      {list?.volume_max ?? "-"}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </li>
+                              <li className="split-li-sum">
+                                <div className="d-flex justify-content-around">
+                                  <div className="ndc-num">
+                                    <h5>
+                                      <span className="tier-span">
+                                        Price Discount (%)
+                                      </span>{" "}
+                                    </h5>
+                                    <h5>{list?.discount_percentage}%</h5>
+                                  </div>
+                                  <div className="ndc-num">
+                                    <h5>
+                                      <span className="tier-span">
+                                        Admin Fees(%)
+                                      </span>{" "}
+                                    </h5>
+                                    <h5>
+                                      {list?.admin_fee_percentage}%
+                                    </h5>
+                                  </div>
+                                  <div className="ndc-num">
+                                    <h5>
+                                      <span className="tier-span">
+                                        Rebate(%)
+                                      </span>{" "}
+                                    </h5>
+                                    <h5>{list?.rebate_percentage}%</h5>
+                                  </div>
+                                </div>
+                              </li>
+                              
+                            </ul>
+                          );
+                        })}
+                    </AccordionBody>
+                  </AccordionItem>
+
+                  <AccordionItem>
+                    <AccordionHeader className="tiered-head" targetId={4}>
+                      Tiered LI
+                    </AccordionHeader>
+                    <AccordionBody accordionId={4} className="tiered-body">
+                      {entities?.products?.length>0 && entities?.products?.map((list) => {
+                          return (
+                            <ul className="acc-list-data tiered">
+                              <li className="hdr">
+                                <div className="d-flex justify-content-between">
+                                  <div className="ndc-num">
+                                    <span>NDC Number</span>
+                                    <h5>{list?.ndc_number}</h5>
+                                  </div>
+                                  <div className="wac-price">
+                                    <span>WAC Price</span>
+                                    <h5 className="text-end">
+                                      {list?.wac_price}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </li>
+                              {list?.tiers?.map((tierData) => {
+                                return (
+                                  <li className="split-li">
+                                    <div className="d-flex align-items-center justify-content-between tier-split">
+                                      <div className="">
+                                        <h6>Tier {tierData?.tier}</h6>
+                                      </div>
+                                      <div className="">
+                                        <h6>
+                                          <span>Discount </span>:{" "}
+                                          {tierData?.discount}
+                                        </h6>
+                                      </div>
+                                      <div>
+                                        <h6>
+                                          <span>Final Price</span> :{" "}
+                                          {tierData?.final_price}
+                                        </h6>
+                                      </div>
+                                    </div>
+                                  </li>
+                                );
+                              })}
+                              
+                            </ul>
+                          );
+                        })}
+                    </AccordionBody>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            ) : activeTab === "preview" ? (
+              <iframe src={pdfUrl?.url} width={"90%"} height={"950px"}></iframe>
+              // <PDFViewer url={pdfUrl?.url}/>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
       </div>
       <Modal
         isOpen={isMaxi}
-        toggle={() => setIsMaxi(!isMaxi)}
+        // toggle={() => setIsMaxi(!isMaxi)}
         centered
         fullscreen
       >
         <ModalHeader toggle={() => setIsMaxi(!isMaxi)}></ModalHeader>
         <ModalBody>
           <iframe
-            src={pdfUrl}
+            src={pdfUrl?.url}
             width={"100%"}
             height={"950"}
             allowFullScreen

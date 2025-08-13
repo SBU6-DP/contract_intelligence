@@ -3,6 +3,7 @@ import Layouts from "../Pages/Layouts/Layouts";
 import "./preview.css";
 import classnames from "classnames";
 import loadingImg from "../../images/icons/Group 3.svg";
+import lightLoading from "../../images/icons/lightLoading.svg";
 import fileImg from "../../images/icons/Excel-default.svg";
 import xmlImg from "../../images/icons/file-02.svg";
 import arrow_narrow_left from "../../images/icons/arrow-narrow-left.svg";
@@ -11,7 +12,7 @@ import right_arrow from "../../images/icons/right-arrow.svg";
 
 import contractPdf from "./SRM Pharma Contract.pdf";
 import pricingPdf from "./Product_Pricing_Table.pdf";
-import demoexcel from "./ContractEntities.xlsx";
+// import demoexcel from "./ContractEntities.xlsx";
 
 import {
   Accordion,
@@ -33,6 +34,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { useTheme } from "../../Themecontext";
 
 const tier = {
   tier_summary: [
@@ -462,7 +465,7 @@ const accordionData = [
   },
 ];
 
-const loadingStatus = [
+export const loadingStatus = [
   "Analyzing your PDF...",
   "Looking for key data points and patterns…",
   "Extracting contract offer, business segment, product group, Tired LI summary...",
@@ -473,6 +476,8 @@ const loadingStatus = [
 
 function Preview() {
   const location = useLocation();
+  const contractsData = useSelector((state)=>state.contract.contracts)
+   const { theme, toogleTheme } = useTheme();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("1");
@@ -525,10 +530,12 @@ function Preview() {
     }
   }, [location]);
 
+  console.log(location)
+
  
   const fetchContract = async () => {
     axios
-      .get(`https://icontract-backend.srm-tech.com/icontract/backend/AllColumns/${location?.state?.contractNum}`)
+      .get(`https://icontract-backend.srm-tech.com/icontract/backend/AllColumns/${location?.state?.contractNum}/${location?.state?.version}`)
       .then((res) => {
         setIsLoading(false)
         console.log(res.data);
@@ -547,74 +554,137 @@ function Preview() {
     if (location?.state?.contractNum) {
       fetchContract();
     }
-  }, [location]);
+  }, [location?.state?.contractNum]);
 
-  const exportResultToExcel = () => {
-    toast.loading("Downloading....", { duration: Infinity });
-    if (responseData?.contract) {
-      const dataSections = responseData?.contract || result.result;
-      const combinedSheetData = [];
+//  const handleExport = () => {
+    
 
-      Object.entries(dataSections).forEach(([sectionName, data]) => {
-        if (!Array.isArray(data)) return;
+//     const sheetData = [];
 
-        // Section heading
-        combinedSheetData.push({
-          Field: sectionName.toUpperCase(),
-          Answer: "",
-        });
+//     // Helper to push a section into sheetData
+//     const pushSection = (title, data) => {
+//       if (!data || data.length === 0) return;
+//       sheetData.push([`=== ${title.toUpperCase()} ===`]); // Title
+//       // sheetData.push(Object.keys(data));  
+//       console.log(data)             // Header
+//       Object.entries(data).forEach((item) => {
+//         sheetData.push(Object.values(item));              // Rows
+//       });
+//       sheetData.push([]); // Empty row after section
+//     };
 
-        // Rows for this section
-        data.forEach(({ field, answer }) => {
-          combinedSheetData.push({ Field: field, Answer: answer });
-        });
+//     // Build data into a single array
+//     pushSection("Contracts", contractOffer);
+//     pushSection("Tier Structures", tierSummary);
+//     pushSection("Products", tierDataProduct);
 
-        // Add an empty row between sections
-        combinedSheetData.push({});
+//     // Convert to worksheet
+//     const ws = XLSX.utils.aoa_to_sheet(sheetData);
+
+//     // Create workbook and export
+//     const wb = XLSX.utils.book_new();
+//     XLSX.utils.book_append_sheet(wb, ws, "Combined Data");
+
+//     const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+//     const blob = new Blob([wbout], {
+//       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+//     });
+
+//     saveAs(blob, `${url?.file_name}.xlsx`);
+//   };
+
+  const handleExport = () => {
+  const sheetData = [];
+
+  // Helper to push object or array section into sheetData
+  const pushSection = (title, data) => {
+    if (!data || (Array.isArray(data) && data.length === 0)) return;
+
+    sheetData.push([`${title.toUpperCase()}`]);
+
+    if (Array.isArray(data)) {
+      const headers = Object.keys(data[0] || {});
+      sheetData.push(headers);
+      data.forEach((item) => {
+        sheetData.push(headers.map((key) => item[key]));
       });
-
-      const workbook = XLSX.utils.book_new();
-      const worksheet = XLSX.utils.json_to_sheet(combinedSheetData);
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Combined");
-
-      const excelBuffer = XLSX.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
+    } else if (typeof data === "object") {
+      const entries = Object.entries(data);
+      // sheetData.push(["Key", "Value"]);
+      entries.forEach(([key, value]) => {
+        sheetData.push([key, typeof value === "object" ? JSON.stringify(value) : value]);
       });
-
-      const blob = new Blob([excelBuffer], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
-
-      toast.remove();
-      toast.success("Downloaded Successfully");
-
-      saveAs(blob, "Contract_Result.xlsx");
-    } else {
-      toast.remove();
-      toast.success("Downloaded Successfully");
-      saveAs(demoexcel, "Contract_Result");
     }
+
+    sheetData.push([]); // Spacer row
   };
+
+  // Push each section
+  pushSection("Contracts", contractOffer);
+  pushSection("Tier Structures", tierSummary);
+  // pushSection("Products", tierDataProduct);
+
+  // Convert to worksheet
+  const ws = XLSX.utils.aoa_to_sheet(sheetData);
+
+  // Create and append workbook
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Combined Data");
+
+  // Write and download
+  const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  const blob = new Blob([wbout], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+
+  const filename = url?.file_name?.split('.')[0] || "exported_data";
+  saveAs(blob, `${filename}.xlsx`);
+};
+
+  const prevContract =()=>{
+    
+    let currentIndex = contractsData?.findIndex(
+      (list) =>
+        list.contract_number === location?.state?.contractNum &&
+        list.document_version_number === location?.state?.version
+    );
+    let nextIndex = currentIndex === 0 ? Number(1) : currentIndex - 1;
+    console.log(contractsData[nextIndex]?.contract_number)
+    if(currentIndex!==0){
+      navigate('/list/preview',{state:{contractNum:contractsData[nextIndex]?.contract_number,version:contractsData[nextIndex]?.document_version_number}})
+    }
+  }
+
+
+  const nextContract =()=>{
+    
+    let currentIndex = contractsData?.findIndex((list)=>list.contract_number === location?.state?.contractNum &&
+        list.document_version_number === location?.state?.version)
+    let nextIndex = currentIndex+1
+    console.log(contractsData[nextIndex]?.document_version_number)
+    if(nextIndex !== contractsData.length){
+      navigate('/list/preview',{state:{contractNum:contractsData[nextIndex]?.contract_number,version:contractsData[nextIndex]?.document_version_number}})
+    }
+  }
 
   return (
     <Layouts>
       <div className="container-fluid position-relative">
         <div className="doc-nav">
           <div className="head-back">
-            <h5 onClick={() => navigate("/list")}>
+            <h5 onClick={() => navigate(-1)}>
               <img src={arrow_narrow_left} />
               {url?.file_name}
             </h5>
           </div>
           <div className="next-page">
-            <span>
+            <span onClick={()=>prevContract()}>
               <img src={left_arrow} />
             </span>
             <span className="count-page">
-              <span>01</span>/<span>12</span>
+              <span>{contractsData?.findIndex((list)=>list.contract_number === location?.state?.contractNum && list.document_version_number===location?.state?.version ) + 1}</span>/<span>{contractsData?.length}</span>
             </span>
-            <span>
+            <span onClick={()=>nextContract()}>
               <img src={right_arrow} />
             </span>
           </div>
@@ -623,9 +693,11 @@ function Preview() {
           {/* Left Side: File Preview */}
           <Col lg="8" className="left-nav">
             <iframe
+            id="pdf-preview"
               src={url ? `${url?.file_url}` : ''}
               width={"100%"}
               height={"900px"}
+              style={{ backgroundColor: "white" }}
             ></iframe>
             {/* <Nav tabs className="pt-2 preview-nav">
               <NavItem>
@@ -682,12 +754,12 @@ function Preview() {
             className="d-flex flex-column justify-content-between p-0 right-tab"
           >
             <div className="prev-acc-box">
-              <h6 className="text-light acc-head">Contract Entities</h6>
+              <h6 className="acc-head">Contract Entities</h6>
               {isLoading ? (
                 <>
                   <div className="container my-5 p-0 loading-contract">
                     <div className="w-50 m-auto text-center">
-                      <img src={loadingImg} className="loadingimg" />
+                      <img src={theme==='Dark' ?loadingImg: lightLoading} className="loadingimg" />
                       <h5 className="loading-info">
                         <i>{loadingStatus[statusIndex]}</i>
                       </h5>
@@ -710,10 +782,14 @@ function Preview() {
                         <ul className="acc-list-data">
                           {Object.entries(contractOffer).map(
                             ([key, value], index) => (
+                                key !== "id" && key !=="created_at" && key !=="updated_at" && key !== "adjust_by" &&
+                                      key !== "category_pricing" &&
+                                      key !== "price_list_name" &&
+                                      key !== "pricing_method" ?
                               <li key={index}>
-                                <span className="text-capitalize">{key}:</span>
-                                {String(value)}
-                              </li>
+                                <span className="text-capitalize">{key.replace(/_/g, " ")}: </span>
+                                 {String(value)}
+                              </li> :''
                             )
                           )}
                         </ul>
@@ -734,7 +810,7 @@ function Preview() {
                               key === "number_of_tiers" ? (
                                 <li key={index}>
                                   <span className="text-capitalize">
-                                    {key}:
+                                    {key.replace(/_/g, " ")}:
                                   </span>{" "}
                                   {String(value)}
                                 </li>
@@ -754,10 +830,10 @@ function Preview() {
                         {tierSummary?.map((list, idx) => {
                           return (
                             <ul className="acc-list-data tiered">
-                              <li className="hdr">
+                              <li className="hdr pt-3">
                                 <h6>
-                                  Tier Level :
-                                  <span className="cnt">0{list?.tier_level}</span>{" "}
+                                  Tier Level: 
+                                  <span className="cnt"> 0{list?.tier_level}</span>{" "}
                                 </h6>
                               </li>
                               <li className="hdr">
@@ -914,13 +990,13 @@ function Preview() {
                         {tierDataProduct?.map((list) => {
                           return (
                             <ul className="acc-list-data tiered">
-                              <li className="hdr">
+                              <li className="hdr pt-3">
                                 <div className="d-flex justify-content-between">
                                   <div className="ndc-num">
                                     <span>NDC Number</span>
                                     <h5>{list?.ndc_number}</h5>
                                   </div>
-                                  <div className="wac-price">
+                                  <div className="wac-price text-end">
                                     <span>WAC Price</span>
                                     <h5 className="text-end">
                                       {list?.wac_price}
@@ -937,13 +1013,13 @@ function Preview() {
                                       </div>
                                       <div className="">
                                         <h6>
-                                          <span>Discount </span>:{" "}
+                                          <span>Discount:</span>{" "}
                                           {tierData?.discount}
                                         </h6>
                                       </div>
                                       <div>
                                         <h6>
-                                          <span>Final Price</span> :{" "}
+                                          <span>Final Price:</span>{" "}
                                           {tierData?.final_price}
                                         </h6>
                                       </div>
@@ -1111,15 +1187,15 @@ function Preview() {
               ""
             ) : (
               <div className="p-3 d-flex justify-content-evenly  gap-2 export-btn">
-                <Button
+                <button
                   className="exportxl-btn"
-                  onClick={() => exportResultToExcel("Pricing")}
+                  onClick={() => handleExport()}
                 >
                   <img src={fileImg} /> Export as Excel
-                </Button>
-                <Button className="exportxl-btn">
+                </button>
+                {/* <Button className="exportxl-btn">
                   <img src={xmlImg} /> Export as XML
-                </Button>
+                </Button> */}
               </div>
             )}
           </Col>

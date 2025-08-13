@@ -10,5 +10,5 @@ section.main-section{
     height: 100%;
     min-height: 100vh;
     padding: calc(80px) 0px 10px 0px;
-    background-color: #0C111D;
+    background-color: var(--section-main-section);
 }

@@ -16,6 +16,7 @@ import Preview from "./Components/Preview/Preview";
 import ContractFile from "./Components/Pages/ContractFile/ContractFile";
 import Chat from "./Components/Pages/Chat/Chat";
 import ContractList from "./Components/Pages/ContractList/ContractList";
+import ContractListNew from "./Components/Pages/ContractList/ContractListNew";
 
 const dashboardRoutes = [
   {
@@ -126,7 +127,7 @@ const contractRouters =[
     children:[
       {
         index: true,
-        element: <ContractList />,
+        element: <ContractListNew />,
       },
     ]
   }

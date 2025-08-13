@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import filterReducer from '../features/criteriaSlice'
 import chatSlice from '../features/chat.bot'
+import contractSlice from '../features/contractSlice'
 
 const loadFromLocalStorage = () => {
     try {
@@ -32,7 +33,8 @@ const loadFromLocalStorage = () => {
 const store = configureStore({
     reducer: {
         criteria:filterReducer,
-        chat:chatSlice
+        chat:chatSlice,
+        contract:contractSlice
     },
     preloadedState,
   })

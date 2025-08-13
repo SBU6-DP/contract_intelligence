@@ -10,30 +10,34 @@ import srm_white_logo from '../../../images/Logo/logo_srm_white.png'
 
 import nexus from '../../../images/Logo/NexusLabs-Logo.png'
 import { useTranslation } from 'react-i18next'
+import Avatar from '@mui/material/Avatar';
+import { useTheme } from '../../../Themecontext'
 
 function Topbar() {
-    const navigate = useNavigate()
-    const { t, i18n } = useTranslation();
-    const { instance,accounts} = useMsal();
+  const navigate = useNavigate()
+  const { t, i18n } = useTranslation();
+  const { instance, accounts } = useMsal();
+  const { theme, toogleTheme } = useTheme();
+
 
   const handleLogout = () => {
     instance.logoutRedirect({
-      postLogoutRedirectUri: "https://intelligence-contract.srm-tech.com", // 🔁 Back to login page or home
+      postLogoutRedirectUri: "https://intelligence-contract.srm-tech.com/", // 🔁 Back to login page or home
     });
   };
 
   console.log(accounts)
-    return (
-      <nav className="header" role="navigation">
-        <div className="header-left">
-          <h6 className="nav-title">
-            {/* <img src={nexus}/> */}
-            {/* <img src={srm_white_logo} className="sidebar-logo" /> */}
-            IntelliContract
-          </h6>
-        </div>
-        <div className="header-right">
-          {/* <div className="header-icon">
+  return (
+    <nav className="header" role="navigation">
+      <div className="header-left">
+        <h6 className="nav-title">
+          {/* <img src={nexus}/> */}
+          {/* <img src={srm_white_logo} className="sidebar-logo" /> */}
+          IntelliContract
+        </h6>
+      </div>
+      <div className="header-right">
+        {/* <div className="header-icon">
            <button onClick={() => i18n.changeLanguage('en')}>English</button>
       </div> 
       <div className="header-icon">
@@ -41,31 +45,41 @@ function Topbar() {
      
       </div> */}
 
-          <span></span>
-          <div className="header-profile">
-            <div className="d-flex align-items-center gap-2">
-              <img src={bell} className="header-notifi" />
-              <img
+        <span></span>
+        <div>
+          <label class="switch">
+            <input type="checkbox"
+              onChange={toogleTheme}
+              checked={theme==='Light'}
+                    />
+              <span class="slider"></span>
+          </label>
+        </div>
+        <div className="header-profile">
+          <div className="d-flex align-items-center gap-2">
+            {/* <img src={bell} className="header-notifi" /> */}
+            <Avatar className="profile-img" style={{ backgroundColor: '#8c8c8c', color: '#1f1f1f', fontWeight: 550 }}>{accounts[0]?.name?.charAt(0)?.toUpperCase()}</Avatar>
+            {/* <img
                 src={profile}
                 className="profile-img"
                 alt="Profile"
                 title={`${accounts[0]?.name}`}
-              />
-              {/* <img src={dropdown} alt="Dropdown" /> */}
-            </div>
-            <ul className="header-profile-dropdown">
-              <Link to={"/profile"}>
-                <li>My Profile</li>
-              </Link>
-              {/* <li>Manage Address</li> */}
-              <li className="logout" onClick={() => handleLogout()}>
-                Logout
-              </li>
-            </ul>
+              /> */}
+            {/* <img src={dropdown} alt="Dropdown" /> */}
           </div>
+          <ul className="header-profile-dropdown">
+            {/* <Link to={"/profile"}>
+                <li>My Profile</li>
+              </Link> */}
+            {/* <li>Manage Address</li> */}
+            <li className="logout" onClick={() => handleLogout()}>
+              Logout
+            </li>
+          </ul>
         </div>
-      </nav>
-    );
+      </div>
+    </nav>
+  );
 }
 
 export default Topbar

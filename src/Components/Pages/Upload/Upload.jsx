@@ -9,10 +9,20 @@ import { useNavigate } from "react-router-dom";
 import request from "../../../api/api";
 import toast from "react-hot-toast";
 import axios from "axios";
+import arrow_narrow_left from "../../../images/icons/arrow-narrow-left.svg";
+import purpleUpload from './../../../images/upload_icons/upload_doc_light1.svg';
+import { useTheme } from "../../../Themecontext";
+import filelight from './../../../images/upload_icons/fileLight.svg'
+import filedark from './../../../images/upload_icons/fileDark.svg'
+import trashdark from'./../../../images/upload_icons/trashDark.svg'
+import trashlight from'./../../../images/upload_icons/trashLight.svg'
 
 function Upload() {
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
+  const [isUpload,setIsUpload] = useState(false)
+    const { theme, toogleTheme } = useTheme();
+  
   console.log(files)
 
   const [uploadProgress, setUploadProgress] = useState({
@@ -93,64 +103,58 @@ function Upload() {
     
   // };
 
-  const handleUpload = () => {
+const handleUpload = async () => {
+  setIsUpload(true);
+
   if (files.length <= 0) {
     return alert("Please upload file");
   }
 
   toast.loading("Uploading...", { duration: Infinity });
 
-  // Sequential Promise chain
-  let chain = Promise.resolve();
-
-  files.forEach((li) => {
-    chain = chain
-      .then(() => {
+  try {
+    // Upload all files to S3
+    await Promise.all(
+      files.map(async (li) => {
         const formData = new FormData();
         formData.append("file", li.file);
-
-        // First: process the contract
-        return axios.post("https://intell-ai.srm-tech.com/icontract/process_contract", formData);
+        await axios.post("https://icontract-backend.srm-tech.com/icontract/backend/uploadtos3", formData);
       })
-      .then((processRes) => {
-        toast.success("Extraction Completed");
+    );
 
-        const formData = new FormData();
-        formData.append("file", li.file);
+    toast.dismiss();
+    toast.success("Upload Completed");
 
-        // Then: upload to S3
-        return axios.post("https://icontract-backend.srm-tech.com/icontract/backend/uploadtos3", formData);
-      })
-      .then((uploadRes) => {
-        toast.success("Upload Completed");
-      })
-      .catch((err) => {
-        console.error("Error during file upload:", err);
-        toast.error("Error occurred for one of the files");
-        // Continue chain, don't break it on error
-      });
-  });
-
-  chain.finally(() => {
-    toast.remove();
-    navigate('/list');
-  });
+    //Navigate immediately after upload
+    navigate("/list", { state: { fromUpload: true, files } });
+  } catch (err) {
+    console.error("Upload failed:", err);
+    toast.dismiss();
+    toast.error("Upload failed");
+  }
 };
+
 
 
   return (
     <Layouts>
+      <div className="upload-head-back upload-back">
+                  <h5 onClick={() => navigate(-1)} style={{cursor:"pointer"}}>
+                    <img src={arrow_narrow_left} />
+                    Back
+                  </h5>
+                </div>
       <div class="container text-center upload-main-box">
         <h2 class="upload-name">Upload Documents</h2>
         <p class="upload-info">
           Your documents should be uploaded as a PDF file (maximum size 100MB).
         </p>
         <>
-          <div class="upload-box mb-4">
-            <label for="contractUpload" class="upload-area">
-              <img src={upload_doc} />
+          <div class="upload-box">
+            <label for="contractUpload" class="upload-area" style={{height:50}}>
+              <img src={theme==="Dark"? upload_doc :purpleUpload} className="upload-img"/>
               <span class="text-white-50">
-                <u>Upload your Contract Document</u>
+                <u className="dottedbox-upload-content">Upload Contract Documents</u>
               </span>
               <input
                 type="file"
@@ -171,11 +175,11 @@ function Upload() {
                   className=" bg-opacity-10 p-3 rounded mb-3 uploaded-box"
                 >
                   <div className="d-flex align-items-center justify-content-between">
-                    <div className="d-flex align-items-center">
+                    <div className="d-flex align-items-center uploaded-doc">
                       <div className="me-2">
-                        <img src={fileImg} className="file-img" />
+                        <img src={theme==="Light"? filelight:filedark} className="file-img" />
                       </div>
-                      <span className="text-white-50">
+                      <span className="uploaded-file-name">
                         Contract Document: {fileObj.file.name}
                       </span>
                     </div>
@@ -184,7 +188,7 @@ function Upload() {
                         {fileObj.progress === 100 ? (
                           <div className="trash-round">
                             <img
-                              src={trash}
+                              src={theme==="Light"?trashlight:trashdark}
                               className="trash-img"
                               onClick={() => removeFile(fileObj.id)}
                             />
@@ -274,7 +278,7 @@ function Upload() {
       </div>
       <div className="text-center">
         {files.length > 0 ? (
-          <button class="upload-btn" onClick={() => handleUpload()}>
+          <button class="upload-btn" disabled={isUpload} onClick={() => handleUpload()}>
             <img src={uploadImg} /> Upload
           </button>
         ) : (

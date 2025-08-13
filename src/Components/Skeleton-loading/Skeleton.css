@@ -55,7 +55,7 @@
 .card-view-loader-wrap.card-header-loader .card-view-list-item {
   min-height: auto;
   border: 2px solid var(--bg-border);
-  background: #f1f8ff;
+  background: #1f242f;
 }
 
 .tenders-table-item {
@@ -95,4 +95,9 @@
   /* border: 1px solid green; */
   width: 30%;
   text-align: right;
+}
+
+
+.react-loading-skeleton {
+  --base-color: var(--skeleton-base-color);
 }

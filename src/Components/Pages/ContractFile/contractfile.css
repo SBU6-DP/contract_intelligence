@@ -9,16 +9,16 @@
 }
 
 .list-head h5{
-    color: #F5F5F6;
+    color: var(--contarct-file-head);
     font-size: 18px;
     font-weight: 400;
 }
 
 .list-head .contract-upld-btn{
     padding: 12px 19px;
-    background-color: #161B26;
-    color: #F5F5F6;
-    border: 1px solid #333741;
+    background-color: var(--contract-file-upload-bg);
+    color: var(--contarct-file-upload-button-font);
+    border: 1px solid var(--contarct-file-upload-button-border);
     border-radius: 8px;
 }
 
@@ -29,7 +29,7 @@
 }
 
 .list-head .contract-upld-btn:hover{
-    background-color: #1F242F;
+    background-color: var(--contact-file-upload-button-hover-bg);
 }
 
 /* No data */
@@ -62,18 +62,18 @@
 /* Tbales */
 
 .Table-contract-list{
-color: #94969C;
+    color: var(--contract-list-table-color);
 width: 100%;
-border: 1px solid #1F242F;
+border: 1px solid var(--contarct-table-border);
 margin-top: 20px;
 }
 
 .Table-contract-list tr{
-    border-bottom: 1px solid #1F242F;
+    border-bottom: 1px solid var(--contarct-table-border);
 }
 
 .Table-contract-list .table-row{
-    background-color: #252a33;
+    background-color: var(--contract-table-bg-color);
 }
 
 
@@ -90,9 +90,10 @@ width:320px;
 height: 44px;
 gap: 12px;
 padding: 12px;
-color: #94969C;
+color: var(--contract-list-table-color);
 text-align: left;
- font-weight: 400;
+ font-weight: 500;
+ background-color: transparent;
 }
 
 .Table-contract-list .id-box{
@@ -100,9 +101,9 @@ width: 170px;
 height: 44px;
 gap: 12px;
 padding: 12px;
-color: #94969C;
-text-align: left;
+color: var(--contract-list-table-color);
  font-weight: 400;
+  background-color: transparent;
 }
 
 .Table-contract-list .type-box{
@@ -110,23 +111,25 @@ width: 110px;
 height: 44px;
 gap: 12px;
 padding: 12px;
-color: #94969C;
-text-align: left;
+color: var(--contract-list-table-color);
  font-weight: 400;
+  background-color: transparent;
 }
 .Table-contract-list .ver-box{
     width: 120px;
 height: 44px;
 padding: 12px;
-color: #94969C;
+color: var(--contract-list-table-color);
  font-weight: 400;
+  background-color: transparent;
 }
 .Table-contract-list .status-box{
     width: 226px;
 height: 44px;
 padding: 12px;
-color: #94969C;
+color: var(--contract-list-table-color);
  font-weight: 400;
+  background-color: transparent;
 }
 
 .Table-contract-list .checkbox-icon{
@@ -166,40 +169,50 @@ margin: 8px;
 }
 
 .total-contract{
-    height: 92px;
-    padding: 12px;
+    height: 40px;
     display: flex;
-    border: 1px solid #1F242F;
-    border-radius: 12px;
+    padding: 4px 12px;
+    align-items: center;
+    border: 1px solid var(--total-contarct-border);
+    border-radius: 8px;
+    white-space: nowrap;
 }
 
 .total-contract img{
-    width: 24px;
-    height: 24px;
+    width: 14px;
+    height: 14px;
 }
 
 .total-contract .count-round{
     display: flex;
     align-items: center;
     justify-content: center;
-    width:48px;
-    height: 48px;
+    width:28px;
+    height: 28px;
     border-radius: 50%;
-    margin-right: 20px;
     margin-top: 10px;
+    margin-right: 2px;
     margin-bottom: 10px;
+}
+
+.total-contract .count-result {
+    display: flex;
+    align-items: center;
 }
 
 .total-contract .count-result .head{
     font-size: 14px;
     font-weight: 500;
-    color: #94969C;
+    margin: 0px 8px;
+    color: var(--count-result-head);
 }
 
 .total-contract .count-result .result{
-    font-size: 36px;
+    font-size: 16px;
+    margin-left: 8px;
+    margin-bottom: 0;
     font-weight: 600;
-    color: #F5F5F6;
+    color: var(--count-resul-result);
 }
 
 .total-contract .count-round.blue{
@@ -212,8 +225,32 @@ margin: 8px;
     background-color: #DC6803;
 }
 
-.contract-result-list{
+.Table-contract-list .contract-result-list{
     cursor: pointer;
+}
+
+.Table-contract-list .contract-result-list:hover{
+    background-color: var(--Table-contract-list-contract-result-list-hover);
+}
+
+.contract-result-list .status-box .analyse{
+    background-color: var(--contract-result-list-status-box-analyse);
+    border: 1px solid var(--contract-result-list-status-box-analyse-border);
+    color: var(--contract-result-list-status-box-analyse-txt-color);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 8px;
+     border-radius: 8px;
+}
+
+.contract-result-list .status-box .review{
+    background-color: var(--contract-result-list-status-box-review);
+    border: 1px solid var(--contract-result-list-status-box-review-border);
+    color: var(--contract-result-list-status-box-review-txt-color);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 8px;
 }
 
 

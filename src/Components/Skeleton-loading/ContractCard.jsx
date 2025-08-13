@@ -10,11 +10,11 @@ const ContractCard = () => {
         width:'100%',
         padding: '16px',
         borderRadius: '8px',
-        backgroundColor: '#0C111D',
-        color: '#fff',
+        backgroundColor: 'var(--grid-card-bg)',
+        color: 'var(--text)',
       }}
     >
-      <SkeletonTheme color="#2a2a2a" highlightColor="#444">
+      <SkeletonTheme color="var(--text)" highlightColor="var(--grid-hover)">
         {/* Header with icon and title */}
         <div className="d-flex align-items-start gap-2 mb-2">
           <Skeleton width={30} height={40} /> {/* Icon placeholder */}

@@ -3,7 +3,8 @@ import './App.css'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { Toaster } from 'react-hot-toast'
 import 'react-circular-progressbar/dist/styles.css';
-import 'react-loading-skeleton/dist/skeleton.css'
+import 'react-loading-skeleton/dist/skeleton.css';
+import "react-datepicker/dist/react-datepicker.css";
 import router from './router'
 import './i18n'
 

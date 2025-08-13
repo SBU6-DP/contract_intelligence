@@ -15,13 +15,13 @@ export default function AppWrapper() {
         const response = await instance.handleRedirectPromise();
         if (response) {
           instance.setActiveAccount(response.account);
-          navigate('/list'); // ✅ Redirect to dashboard after login
+          navigate('/contract'); // ✅ Redirect to dashboard after login
         } else if (isAuthenticated) {
           const account = instance.getActiveAccount() || instance.getAllAccounts()[0];
           if (account) {
             instance.setActiveAccount(account);
             if (location === '/') {
-                navigate('/list', { replace: true });
+                navigate('/contract', { replace: true });
                 console.log(window.location.pathname)
               }// ✅ Already logged in
           }
