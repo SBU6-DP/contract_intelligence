@@ -22,7 +22,7 @@ import axios from "axios";
 import { loadingStatus } from "../../Preview/Preview";
 import toast from "react-hot-toast";
 import { useTheme } from "../../../Themecontext";
-import PDFViewer from "../../PdfView/PdfViewer";
+// import PDFViewer from "../../PdfView/PdfViewer";
 
 const messages = [
   {
