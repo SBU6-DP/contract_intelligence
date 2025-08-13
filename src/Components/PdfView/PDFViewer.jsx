@@ -1,6 +1,6 @@
 // PDFViewer.jsx
 import { useEffect, useRef } from "react";
-// import { getDocument, GlobalWorkerOptions, version } from "pdfjs-dist";
+import { getDocument, GlobalWorkerOptions, version } from "pdfjs-dist";
 
 export default function PDFViewer({ url }) {
   const canvasRef = useRef(null);

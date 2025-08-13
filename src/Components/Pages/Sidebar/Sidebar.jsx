@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./sidebar.css";
 import { Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./SidebarData";
-// import nexus from '../../../images/Logo/NexusLabs-Logo.png'
-// import hide_sidebar from '../../../images/icons/left_close.png'
+import nexus from '../../../images/Logo/NexusLabs-Logo.png'
+import hide_sidebar from '../../../images/icons/left_close.png'
 import logo from '../../../images/sidebar_icons/SRM-logo.svg'
 import settings from '../../../images/icons/settings-01.svg'
-// import graphlight from './../../../images/sidebar_icons/Lines-light.svg'
-// import graphdark from './../../../images/sidebar_icons/Lines-dark.svg'
+import graphlight from './../../../images/sidebar_icons/Lines-light.svg'
+import graphdark from './../../../images/sidebar_icons/Lines-dark.svg'
 import { useTheme } from "../../../Themecontext";
 
 function Sidebar() {

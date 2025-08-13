@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import './topbar.css'
 import Breadcrumbs from '../../Breadcrumbs/Breadcrumbs'
@@ -9,6 +9,10 @@ import bell from '../../../images/icons/bell-02.svg'
 import srm_white_logo from '../../../images/Logo/logo_srm_white.png'
 
 import nexus from '../../../images/Logo/NexusLabs-Logo.png'
+import darkActive from '../../../images/topbar-icons/dark-active.svg'
+import lightActive from '../../../images/topbar-icons/light-active.svg'
+import darkInactive from '../../../images/topbar-icons/dark-inactive.svg'
+import lightInactive from '../../../images/topbar-icons/light-inactive.svg'
 import { useTranslation } from 'react-i18next'
 import Avatar from '@mui/material/Avatar';
 import { useTheme } from '../../../Themecontext'
@@ -18,6 +22,8 @@ function Topbar() {
   const { t, i18n } = useTranslation();
   const { instance, accounts } = useMsal();
   const { theme, toogleTheme } = useTheme();
+
+  const [active,setActive] = useState(theme==='Light' ? 'Light' : 'Dark')
 
 
   const handleLogout = () => {
@@ -46,7 +52,33 @@ function Topbar() {
       </div> */}
 
         <span></span>
-        <div>
+        <div className="toggle-button-group ms-2">
+  <button
+    className={`toggle-button ${theme === 'Light' ? 'active' : ''}`}
+    onClick={() => theme !== "Dark" && toogleTheme()}
+  >
+    <span className="icon">
+      <img
+        src={theme === "Dark" ? darkActive : darkInactive}
+        alt="Dark Mode"
+      />
+    </span>
+  </button>
+
+  <button
+    className={`toggle-button ${theme === 'Dark' ? 'active' : ''}`}
+    onClick={() => theme !== "Light" && toogleTheme()}
+  >
+    <span className="icon">
+      <img
+        src={theme === "Light" ? lightActive : lightInactive}
+        alt="Light Mode"
+      />
+    </span>
+  </button>
+</div>
+
+        {/* <div>
           <label class="switch">
             <input type="checkbox"
               onChange={toogleTheme}
@@ -54,7 +86,7 @@ function Topbar() {
                     />
               <span class="slider"></span>
           </label>
-        </div>
+        </div> */}
         <div className="header-profile">
           <div className="d-flex align-items-center gap-2">
             {/* <img src={bell} className="header-notifi" /> */}
