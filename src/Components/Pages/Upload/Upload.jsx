@@ -110,7 +110,7 @@ function Upload() {
         formData.append("file", li.file);
 
         // First: process the contract
-        return axios.post("http://localhost:8006/icontract/process_contract", formData);
+        return axios.post("https://intell-ai.srm-tech.com/icontract/process_contract", formData);
       })
       .then((processRes) => {
         toast.success("Extraction Completed");
@@ -119,7 +119,7 @@ function Upload() {
         formData.append("file", li.file);
 
         // Then: upload to S3
-        return axios.post("http://localhost:8006/icontract/backend/uploadtos3", formData);
+        return axios.post("https://icontract-backend.srm-tech.com/icontract/backend/uploadtos3", formData);
       })
       .then((uploadRes) => {
         toast.success("Upload Completed");

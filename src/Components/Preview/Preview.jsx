@@ -528,7 +528,7 @@ function Preview() {
  
   const fetchContract = async () => {
     axios
-      .get(`http://localhost:8006/icontract/backend/AllColumns/${location?.state?.contractNum}`)
+      .get(`https://icontract-backend.srm-tech.com/icontract/backend/AllColumns/${location?.state?.contractNum}`)
       .then((res) => {
         setIsLoading(false)
         console.log(res.data);

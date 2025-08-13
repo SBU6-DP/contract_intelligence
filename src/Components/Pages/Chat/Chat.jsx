@@ -55,14 +55,21 @@ function Chat() {
       });
   };
 
-  const loadPdf =(filename)=>{
-   axios.post(`https://icontract.srm-tech.com/icontract/backend/download/${filename}`).then((res)=>{
-        setIsPdfPreview(!isPdfPreview)
-        setPdfUrl(res)
-    }).catch((err)=>{
-        console.log(err)
+  const loadPdf = (filename) => {
+  axios
+    .get(`https://icontract-backend.srm-tech.com/icontract/backend/download/${filename}`, {
+      responseType: 'blob',  // Important to handle PDF correctly
     })
-  }
+    .then((res) => {
+      setIsPdfPreview(!isPdfPreview);
+      let blobUrl = URL.createObjectURL(res.data);
+      console.log(blobUrl);
+      setPdfUrl(blobUrl);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
   const renderBulletPoints = (text) => {
   const lines = text.split("\n").filter(line => line.trim() !== "");
@@ -81,6 +88,7 @@ function Chat() {
     </>
   );
 };
+
 
 
   return (
@@ -154,7 +162,7 @@ function Chat() {
                                   {msg?.message?.contract_filenames.length >
                                     0 && (
                                     <>
-                                      Source{" "}
+                                      <span className="text-secondary">Source{" "}</span>
                                       {msg?.message?.contract_filenames?.map(
                                         (pdf) => {
                                           return (
@@ -163,6 +171,7 @@ function Chat() {
                                                 src={pdfRedIcon}
                                                 className="pdf-icons"
                                                 onClick={() => loadPdf(pdf)}
+                                                title={pdf}
                                               />
                                             </>
                                           );
@@ -246,7 +255,7 @@ function Chat() {
               </button>
             </div>
           </div>
-          <iframe src={pricingPdf} width={"90%"} height={"950px"}></iframe>
+          <iframe src={pdfUrl} width={"90%"} height={"950px"}></iframe>
         </div>
       </div>
       <Modal
@@ -258,7 +267,7 @@ function Chat() {
         <ModalHeader toggle={() => setIsMaxi(!isMaxi)}></ModalHeader>
         <ModalBody>
           <iframe
-            src={pricingPdf}
+            src={pdfUrl}
             width={"100%"}
             height={"950"}
             allowFullScreen

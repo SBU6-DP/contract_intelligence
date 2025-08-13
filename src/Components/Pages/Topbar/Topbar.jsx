@@ -18,7 +18,7 @@ function Topbar() {
 
   const handleLogout = () => {
     instance.logoutRedirect({
-      postLogoutRedirectUri: "http://localhost:3000/", // 🔁 Back to login page or home
+      postLogoutRedirectUri: "https://intelligence-contract.srm-tech.com", // 🔁 Back to login page or home
     });
   };
 
