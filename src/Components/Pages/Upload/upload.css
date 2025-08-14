@@ -71,6 +71,7 @@
     color: var(--uploaded-doc-uploaded-file-name);
     font-weight: 400;
     font-size: 16px;
+    text-align: left;
 }
 .uploaded-box:hover{
     background-color:var(--uploaded-box-hover-content);

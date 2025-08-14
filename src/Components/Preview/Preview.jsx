@@ -5,13 +5,13 @@ import classnames from "classnames";
 import loadingImg from "../../images/icons/Group 3.svg";
 import lightLoading from "../../images/icons/lightLoading.svg";
 import fileImg from "../../images/icons/Excel-default.svg";
-// import xmlImg from "../../images/icons/file-02.svg";
+import xmlImg from "../../images/icons/file-02.svg";
 import arrow_narrow_left from "../../images/icons/arrow-narrow-left.svg";
 import left_arrow from "../../images/icons/left-arrow.svg";
 import right_arrow from "../../images/icons/right-arrow.svg";
 
-// import contractPdf from "./SRM Pharma Contract.pdf";
-// import pricingPdf from "./Product_Pricing_Table.pdf";
+import contractPdf from "./SRM Pharma Contract.pdf";
+import pricingPdf from "./Product_Pricing_Table.pdf";
 // import demoexcel from "./ContractEntities.xlsx";
 
 import {

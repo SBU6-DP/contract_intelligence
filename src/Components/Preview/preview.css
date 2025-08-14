@@ -201,7 +201,7 @@
 }
 
 .export-btn{
-    border-top: 1px solid #1F242F;
+    border-top: 1px solid var(--border);
     z-index: 1;
 }
 .exportxl-btn{
@@ -316,7 +316,7 @@
     align-items: center;
     top: 80px;
     left: 80px;
-    padding: 0px 32px;
+    padding: 0px 22px;
     width: 96%;
     height: 60px;
     background-color: var(--doc-nav-bg-color);

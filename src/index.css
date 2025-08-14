@@ -376,7 +376,7 @@
 --contract-tot-box:#FFFFFF;
 --contract-accordian-box:#E4E7EC;
 --webkit-scrollbar-track:#E4E7EC;
---webkit-scrollbar-thumb:#E4E7EC;
+--webkit-scrollbar-thumb:#94969C;
 --select-option-bg-color:#ffffff;
 --select-option-boder-focused:#1018280D;
 --select-option-border-onhover:#9254DE;
@@ -434,6 +434,9 @@
  --preview-li-span-text-color:#475467;
  --border-color-status-icon:#ABEFC6;
  --contract-accordion-head-bg:#F2F4F7;
+ --chat-active-entities-border:#E4E7EC;
+ --react-select-border-color:#D0D5DD;
+ --contract-radio-btn-border:#D0D5DD;
 }
 
 :root[data-theme="Dark"] {
@@ -610,7 +613,7 @@
 --contract-tot-box:#0C111D;
 --contract-accordian-box:#161B26;
 --webkit-scrollbar-track:#333741;
---webkit-scrollbar-thumb:#333741;
+--webkit-scrollbar-thumb:#94969C;
 --select-option-bg-color:#0C111D;
 --select-option-boder-focused:#1F242F;
 --select-option-border-onhover:#B37FEB;
@@ -650,8 +653,8 @@
 --pricing-table-savi-text:#94969C;
 --pricinf-table-dollarfont:#75E0A7;
 --pricing-table-border-bottom:#1F242F;
---pricing-table-total-border:#1F242F80;
---pricing-table-border-total-price:#1F242F80;
+--pricing-table-total-border:rgb(31, 36, 47,0.8);
+--pricing-table-border-total-price:rgb(31, 36, 47,0.8);
 --pricing-evehealth-scrollbar:#333741;
 --skeleton-base-color: #1F242F;
 --accordion-header-border-color:#262A33;
@@ -664,7 +667,9 @@
 --preview-li-span-text-color:#94969C;
 --border-color-status-icon:#085D3A;
 --contract-accordion-head-bg:#161B26;
-
+--chat-active-entities-border:#2c2c2c;
+--react-select-border-color:#333741;
+--contract-radio-btn-border:#333741;
 
 
 }

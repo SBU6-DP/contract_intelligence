@@ -15,10 +15,11 @@
 }
 
 .list-head .contract-upld-btn{
-    padding: 12px 19px;
+    padding: 8px 16px;
+    height: 40px;
     background-color: var(--contract-file-upload-bg);
     color: var(--contarct-file-upload-button-font);
-    border: 1px solid var(--contarct-file-upload-button-border);
+     border: 1px solid var(--total-contarct-border);
     border-radius: 8px;
 }
 
@@ -176,6 +177,7 @@ margin: 8px;
     border: 1px solid var(--total-contarct-border);
     border-radius: 8px;
     white-space: nowrap;
+    background-color: var(--white-bg);
 }
 
 .total-contract img{

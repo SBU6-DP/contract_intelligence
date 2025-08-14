@@ -95,7 +95,7 @@
 
 .pricing-table-box .details-head .opt-btn span{
   margin-right: 40px;
-  color: #94969C;
+  color: var(--text-secondary);
   opacity: 0.8;
   font-size: 14px;
   font-weight: 400;
@@ -553,9 +553,9 @@ font-size: 14px;
     padding-bottom: 16px;
 }
 
-.acc-list-data li span{
+/* .acc-list-data li span{
     color:#94969C
-}
+} */
 
 .acc-list-data .hdr{
     padding-bottom: 20px;
@@ -887,13 +887,14 @@ background-color: var(--pricing-table-th-bg);
 }
 
 .custom-radio {
-  height: 16px;
-  width: 16px;
+  height: 18px;
+  width: 18px;
   border-radius: 50%;
-  border: 2px solid #4b5563;
+  border: 2px solid var(--contract-radio-btn-border);
   margin-right: 10px;
-  display: inline-block;
-  position: relative;
+  display: inline-flex;       /* make it a flex container */
+  align-items: center;        /* vertical center */
+  justify-content: center;    /* horizontal center */
 }
 
 .radio-option input[type="radio"]:checked + .custom-radio {
@@ -903,9 +904,6 @@ background-color: var(--pricing-table-th-bg);
 
 .radio-option input[type="radio"]:checked + .custom-radio::after {
   content: "";
-  position: absolute;
-  top: 2px;
-  left: 2.2px;
   width: 8px;
   height: 8px;
   background-color: #ffffff;

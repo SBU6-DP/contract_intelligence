@@ -6,7 +6,6 @@
   height:100vh;
   position: fixed;
   background-color: var(--initial-main-chat-box);
- 
 }
  
 .chat-preview-pdf {
@@ -20,7 +19,7 @@
 }
  
 .chat {
-  width: 100%;
+  width: calc(100% - 78.222px);
   padding: 40px 168px;
   margin: 0px auto;
   transition: width ease-in 0.2s, margin ease-in 0.2s;
@@ -97,7 +96,7 @@
 }
  
 .chat-search {
-  margin-top: 24px;
+  margin-top: 16px;
   display: flex;
 }
  
@@ -109,6 +108,7 @@
   border-radius: 8px;
   padding: 10px 14px;
   margin-right: 12px;
+  margin-bottom: 12px;
   height: 44px !important;
 }
  
@@ -330,6 +330,7 @@
 .pdf-nav .tab-1.active{
   background-color: var(--initial-tab1-active);
   color: var(--initial-tab1-active-font);
+  border: 1px solid var(--chat-active-entities-border);
 }
  
 .pdf-nav .divider{
@@ -433,9 +434,9 @@
     padding-bottom: 16px;
 }
  
-.acc-list-data li span{
+/* .acc-list-data li span{
     color:#94969C
-}
+} */
  
 .acc-list-data .hdr{
     padding-bottom: 20px;

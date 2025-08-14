@@ -4,7 +4,10 @@ import "./contractlist.css";
 import maximizelight from'./../../../images/icons/Maxi-L.svg'
 import DatePicker from "react-datepicker";
 import lightfile from'../../../images/icons/dash-total-light.svg'
+import eye from "../../../images/icons/eye.svg";
 import maximize from "../../../images/icons/maximize.svg";
+import minimize from "../../../images/icons/minimize.svg";
+import minimizeDark from "../../../images/icons/minimize-dark.svg";
 import eyeCrossImg from "../../../images/icons/eye-off.svg";
 import pdfIcon from "../../../images/icons/pdf-grey-i.svg";
 import request from "../../../api/api";
@@ -118,7 +121,7 @@ const colourStyles = {
     cursor: "pointer",
     minHeight: "40px",
     borderRadius: "8px",
-    borderColor: isFocused ? "var(--select-option-boder-focused)" : "var(--select-option-boder-focused)",
+    borderColor: isFocused ? "var(--select-option-boder-focused)" :  "var(--react-select-border-color)",
     boxShadow: "none",
     ":hover": {
       borderColor: "var(--select-option-border-onhover)",
@@ -164,11 +167,11 @@ const colourStyles = {
 
 const docTypeOption = [
     {
-        label:'Group(GROUP)',
+        label:'Group (GROUP)',
         value:'GPO'
     },
     {
-        label:'Independent Customer Contract(IND)',
+        label:'Independent Customer Contract (IND)',
         value:'IND'
     },
     {
@@ -211,7 +214,7 @@ const pricingOption = [
         value:'LIST'
     },
     {
-        label:'Discount-off-list Pricing Method (DOL)',
+        label:'Discount-Off-List Pricing Method (DOL)',
         value:'DOL'
     },
     {
@@ -219,11 +222,11 @@ const pricingOption = [
         value:'TIER'
     },
     {
-        label:'Dynamic discount off list Pricing Method (DDOL)',
+        label:'Dynamic Discount Off List Pricing Method (DDOL)',
         value:'DDOL'
     },
     {
-        label:'Dynamic tiered Pricing Method (DTIER)',
+        label:'Dynamic Tiered Pricing Method (DTIER)',
         value:'DTIER'
     },
     {
@@ -265,6 +268,17 @@ function ContractListNew() {
       setOpen([...open, id]);
     }
   };
+
+  const handleHideAll = () => {
+  if (open.length > 0) {
+    // close all
+    setOpen([]);
+  } else {
+    // open all
+    const allIds = showSelected?.products?.map((_, idx) => `item-${idx}`);
+    setOpen(allIds);
+  }
+};
   const [contractOffer,setContractOffer] = useState(
     {
               contract_number: "PPPH18SR01",
@@ -700,12 +714,12 @@ function ContractListNew() {
                       <div className="details-head">
                         <h3>Product Pricing Table</h3>
                         <div className="opt-btn">
-                          {/* <span>
-                            <img src={eyeCrossImg} />
-                            Hide All Tier Details
-                          </span> */}
+                          <span onClick={showSelected?.products?.length > 0 && handleHideAll}>
+                            <img src={open.length > 0 ?eyeCrossImg:eye} />
+                            {open.length > 0 ? "Hide All Tier Details" : "View All Tier Details"}
+                          </span>
                           <img
-                            src={maximize}
+                            src={ priceMaxi ? theme==="Dark" ? minimizeDark : minimize : maximize }
                             onClick={() => setPriceMaxi(!priceMaxi)}
                           />
                         </div>
@@ -848,7 +862,7 @@ function ContractListNew() {
                           }
                         />
                         <span class="custom-radio"></span>
-                        Terminated after Implementation
+                        Terminated After Implementation
                       </label>
 
                       <label class="radio-option">
@@ -1062,7 +1076,7 @@ function ContractListNew() {
                             }}
                           />
                           <span class="custom-radio"></span>
-                          Dollars($)
+                          Dollars ($)
                         </label>
                       </div>
                     </div>
@@ -1091,7 +1105,7 @@ function ContractListNew() {
                           }}
                         />
                         <span class="custom-radio"></span>
-                        AMENDMENT
+                        Amendment
                       </label>
                     </div>
                     <div className="apply-filter-btn grid">
@@ -1106,7 +1120,7 @@ function ContractListNew() {
                           className="apply-btn"
                           onClick={() => applyGridFilter()}
                         >
-                          Apply filters
+                          Apply Filters
                         </button>
                       </div>
                     </div>
